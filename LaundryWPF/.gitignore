@@ -1,0 +1,44 @@
+﻿# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+LTShopOnline.WebMVC/appsettings.json
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Tt]emp/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# Packages
+*.nupkg
+packages/
+*.snupkg
+
+# Publish
+*.Publish.xml
+*.pubxml
+*.pubxml.user
+
+# Resharper / Rider
+_ReSharper*/
+*.DotSettings.user
+
+# Others
+*.dbmdl
+*.bak
+*.log
+*.cache
+*.tmp
+*.local
+appsettings.Development.json
+
+# Node (nếu có frontend)
+node_modules/
+wwwroot/lib/
+wwwroot/dist/

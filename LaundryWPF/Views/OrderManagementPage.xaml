@@ -1,0 +1,161 @@
+﻿<Page x:Class="LaundryWPF.Views.OrderManagementPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:viewmodels="clr-namespace:LaundryWPF.ViewModels"
+      mc:Ignorable="d"
+      d:DataContext="{d:DesignInstance Type=viewmodels:OrderManagementViewModel}"
+      Background="#F8FAFC">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="16">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+
+
+            <!-- ===== HEADER: Bộ lọc + nút ===== -->
+            <DockPanel LastChildFill="False" Margin="0,0,0,12">
+                <CheckBox DockPanel.Dock="Left"
+                          Content="Hiển thị đơn đã hoàn thành"
+                          IsChecked="{Binding ShowCompletedOrders}"
+                          FontWeight="SemiBold"
+                          VerticalAlignment="Center"
+                          Margin="0,0,20,0"/>
+
+                <Button Content="Hoàn thành đơn" 
+        Command="{Binding CompleteOrderCommand}" 
+        Margin="4"
+        Background="#16A34A" 
+        Foreground="White"
+        FontWeight="Bold"
+        Padding="8,4"/>
+                
+             
+            </DockPanel>
+
+            <!-- ===== DANH SÁCH ĐƠN + FORM CHI TIẾT ===== -->
+            <Grid Grid.Row="1" Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="6*"/>
+                    <ColumnDefinition Width="4*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Bảng danh sách đơn -->
+                <Border Background="White" CornerRadius="8" Padding="8" Margin="2,0,8,0">
+                    <DataGrid ItemsSource="{Binding Orders}"
+                              SelectedItem="{Binding SelectedOrder, Mode=TwoWay}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"
+                              Padding="0.5"
+                              RowHeight="30">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Mã Đơn" Binding="{Binding OrderId}" Width="30"/>
+                            <DataGridTextColumn Header="Khách Hàng" Binding="{Binding Customer.Name}" Width="Auto"/>
+                            <DataGridTextColumn Header="Dich vụ" Binding="{Binding Service.Name}" Width="Auto"/>
+                            <DataGridTextColumn Header="Trạng Thái" Binding="{Binding Status}" Width="65"/>
+                            <DataGridTextColumn Header="Nhân Viên" Binding="{Binding Staff.Name}" Width="Auto"/>
+                            <DataGridTextColumn Header="Kg" Binding="{Binding Weight}" Width="Auto"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+
+                <!-- Form thông tin đơn -->
+                <Border Grid.Column="1" Background="White" CornerRadius="8" Padding="12" Margin="8,0,0,0">
+                    <StackPanel>
+                        <TextBlock Text="Chi tiết đơn hàng" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Khách hàng:" FontWeight="SemiBold"/>
+                        <ComboBox ItemsSource="{Binding AllCustomers}"
+                                  SelectedItem="{Binding SelectedCustomer}"
+                                  DisplayMemberPath="Name"/>
+
+                        <TextBlock Text="Dịch vụ:" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                        <ComboBox ItemsSource="{Binding AllServices}"
+                                  SelectedItem="{Binding SelectedService}"
+                                  DisplayMemberPath="Name"/>
+
+                        <TextBlock Text="Nhân viên phụ trách:" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                        <ComboBox ItemsSource="{Binding AllStaff}"
+                                  SelectedItem="{Binding SelectedStaff}"
+                                  DisplayMemberPath="Name"/>
+
+                        <TextBlock Text="Tài nguyên:" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                        <ComboBox ItemsSource="{Binding AllResources}"
+                                  SelectedItem="{Binding SelectedResource}"
+                                  DisplayMemberPath="Name"/>
+
+                        <TextBlock Text="Khối lượng (kg):" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                        <TextBox Text="{Binding Weight}" />
+
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                            <Button Content="Tạo mới" Command="{Binding CreateOrderCommand}" Margin="4"/>
+                            <Button Content="Lưu/Cập nhật" Command="{Binding SaveOrderCommand}" Margin="4"/>
+                            <Button Content="Xóa đơn" Command="{Binding DeleteOrderCommand}" Margin="4"/>
+                        </StackPanel>
+                    </StackPanel>
+                   
+                </Border>
+            </Grid>
+
+            <!-- ===== CHI TIẾT MÓN ĐỒ TRONG ĐƠN ===== -->
+            <Border Grid.Row="2" Background="White" CornerRadius="8" Padding="12">
+                <StackPanel>
+                    <TextBlock Text="Chi tiết món đồ trong đơn hàng" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                    <!-- Form nhập -->
+                    <Grid  Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Tên món:"/>
+                            <TextBox Text="{Binding NewItemName}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Margin="8,0">
+                            <TextBlock Text="Số lượng:"/>
+                            <TextBox Text="{Binding NewItemQuantity}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Mô tả:"/>
+                            <TextBox Text="{Binding NewItemDescription}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Nút thao tác -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,10">
+                        <Button Content="Thêm" Command="{Binding AddItemCommand}" Margin="4"/>
+                        <Button Content="Cập nhật" Command="{Binding UpdateItemCommand}" Margin="4"/>
+                        <Button Content="Xóa" Command="{Binding DeleteItemCommand}" Margin="4"/>
+                    </StackPanel>
+
+                    <!-- Bảng danh sách món -->
+                    <DataGrid ItemsSource="{Binding NewOrderItems}"
+                              SelectedItem="{Binding SelectedOrderItem}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"
+                              RowHeight="28" SelectionChanged="DataGrid_SelectionChanged">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Tên món" Binding="{Binding Name}" Width="*"/>
+                            <DataGridTextColumn Header="Số lượng" Binding="{Binding Quantity}" Width="100"/>
+                            <DataGridTextColumn Header="Mô tả" Binding="{Binding Description}" Width="2*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</Page>

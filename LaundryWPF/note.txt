@@ -1,0 +1,11 @@
+﻿dotnet add package Microsoft.EntityFrameworkCore.Design
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer 
+dotnet add package Microsoft.EntityFrameworkCore
+dotnet add package Microsoft.EntityFrameworkCore.Tools
+dotnet add package Microsoft.Extensions.Configuration
+dotnet add package Microsoft.Extensions.Configuration.Json 
+dotnet add package Newtonsoft.Json
+
++ Lệnh scaffold: dotnet ef dbcontext scaffold "Server=DESKTOP-UB61L5E\NHONNT9; Database=StudentCodeFirst;User ID=sa;Password=123123;Trust Server Certificate=True" Microsoft.EntityFrameworkCore.SqlServer -o Models
+
+dotnet ef dbcontext scaffold "Server=MSI\SQLEXPRESS; Database=dtbfirstdemo;User ID=sa;Password=123;Trust Server Certificate=True" Microsoft.EntityFrameworkCore.SqlServer -o Models

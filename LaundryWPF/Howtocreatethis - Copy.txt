@@ -1,0 +1,72 @@
+﻿Tạo class libary DAL và BLL
+	Dùng terminal của Solution
+cài eftool
+dotnet tool install --global dotnet-ef
+
+Dùng ở terminal DAL
+các nuget packet cần thiết
+	dotnet add package Microsoft.EntityFrameworkCore
+	dotnet add package Microsoft.EntityFrameworkCore.SqlServer 
+	dotnet add package Microsoft.EntityFrameworkCore.Design
+	dotnet add package Microsoft.EntityFrameworkCore.Tools
+
+	dotnet add package Microsoft.Extensions.Configuration
+	dotnet add package Microsoft.Extensions.Configuration.Json 
+	dotnet add package Newtonsoft.Json
+
+Refferrence các project theo WebMVC Controller → BLL Service → DAL Repository → Database
+dotnet add LTShopOnline.BLL reference LTShopOnline.DAL
+dotnet add LTShopOnline.WebMVC reference LTShopOnline.BLL 
+
+	Ở WebMVC/Appsetting thêm
+	{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=.;Database=LTShopOnline;Trusted_Connection=True;TrustServerCertificate=True;"
+  }
+}
+Trusted_Connection=True; → dùng Windows Auth (nếu xài SQL Server Authentication thì thay bằng User Id=sa;Password=xxx;).
+	
+
+	Terminal DAL: Sử dụng scaffold để tạo dbcontext + model
+	dotnet ef dbcontext scaffold "Server=.;Database=LTShopOnline;User ID=sa;Password=123;Trust Server Certificate=True"  Microsoft.EntityFrameworkCore.SqlServer -o Models
+
+
+	Trong WebMVC/Program.cs
+	 ở đầu: 
+	using LTShopOnline.DAL.Models;
+
+	trước app builder:
+	builder.Services.AddDbContext<LTShopOnlineContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+	Đăng kí 
+	// Đăng ký Repository (DAL)
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+// Đăng ký Service (BLL)
+builder.Services.AddScoped<IProductService, ProductService>();
+	 
+	 Lên chatGPT tạo các DI tương ứng
+	 rồi thêm using ở program.cs
+	 using Microsoft.EntityFrameworkCore;
+	using LTShopOnline.DAL;
+	using LTShopOnline.DAL.Repositories;
+	using LTShopOnline.BLL.Services;
+
+
+	+ Điều chỉnh lại kết nối trong DbContext tự sinh từ lệnh scaffold:
+Thêm phương thức GetConnectionString để lấy chuỗi kết nối từ file appsettings.json và đổi chuỗi ConnectionString trong phương thức OnConfiguring thành phương thức GetConnectionString:
+private string GetConnectionString()
+    {
+        IConfiguration configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json",true,true)
+            .Build();
+        var connectionstring = configuration["ConnectionStrings:DefaultConnection"];
+        return connectionstring;
+    }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseSqlServer(GetConnectionString());
+
+
+
+
