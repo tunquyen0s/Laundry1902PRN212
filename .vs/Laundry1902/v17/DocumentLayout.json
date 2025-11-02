@@ -1,54 +1,18 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\",
+  "WorkspaceRootPath": "C:\\Users\\trilt\\Desktop\\Laundry1902PRN212\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|f:\\quantrong\\hoc\\cnk7\\re-prn212\\project\\laundry1902\\laundrywpf\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|solutionrelative:laundrywpf\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+      "AbsoluteMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|c:\\users\\trilt\\desktop\\laundry1902prn212\\laundrywpf\\viewmodels\\manageresourcesviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|solutionrelative:laundrywpf\\viewmodels\\manageresourcesviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|f:\\quantrong\\hoc\\cnk7\\re-prn212\\project\\laundry1902\\laundrywpf\\viewmodels\\ordermanagementviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|solutionrelative:laundrywpf\\viewmodels\\ordermanagementviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|c:\\users\\trilt\\desktop\\laundry1902prn212\\laundrywpf\\views\\manageresources.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|solutionrelative:laundrywpf\\views\\manageresources.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|f:\\quantrong\\hoc\\cnk7\\re-prn212\\project\\laundry1902\\laundrywpf\\views\\ordermanagementpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|solutionrelative:laundrywpf\\views\\ordermanagementpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|f:\\quantrong\\hoc\\cnk7\\re-prn212\\project\\laundry1902\\laundrywpf\\models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|solutionrelative:laundrywpf\\models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|f:\\quantrong\\hoc\\cnk7\\re-prn212\\project\\laundry1902\\laundrywpf\\helpers\\relaycommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|solutionrelative:laundrywpf\\helpers\\relaycommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|f:\\quantrong\\hoc\\cnk7\\re-prn212\\project\\laundry1902\\laundrywpf\\views\\dashboardwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|solutionrelative:laundrywpf\\views\\dashboardwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|f:\\quantrong\\hoc\\cnk7\\re-prn212\\project\\laundry1902\\laundrywpf\\views\\ordermanagementpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|solutionrelative:laundrywpf\\views\\ordermanagementpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|f:\\quantrong\\hoc\\cnk7\\re-prn212\\project\\laundry1902\\laundrywpf\\models\\orderitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|solutionrelative:laundrywpf\\models\\orderitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|f:\\quantrong\\hoc\\cnk7\\re-prn212\\project\\laundry1902\\laundrywpf\\views\\pagehome.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|solutionrelative:laundrywpf\\views\\pagehome.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|f:\\quantrong\\hoc\\cnk7\\re-prn212\\project\\laundry1902\\laundrywpf\\models\\sem7prn212context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|solutionrelative:laundrywpf\\models\\sem7prn212context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|f:\\quantrong\\hoc\\cnk7\\re-prn212\\project\\laundry1902\\laundrywpf\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|solutionrelative:laundrywpf\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|f:\\quantrong\\hoc\\cnk7\\re-prn212\\project\\laundry1902\\laundrywpf\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|solutionrelative:laundrywpf\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|c:\\users\\trilt\\desktop\\laundry1902prn212\\laundrywpf\\views\\manageresources.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|solutionrelative:laundrywpf\\views\\manageresources.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     }
   ],
   "DocumentGroupContainers": [
@@ -61,156 +25,41 @@
           "SelectedChildIndex": 1,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ManageResources.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\trilt\\Desktop\\Laundry1902PRN212\\LaundryWPF\\Views\\ManageResources.xaml.cs",
+              "RelativeDocumentMoniker": "LaundryWPF\\Views\\ManageResources.xaml.cs",
+              "ToolTip": "C:\\Users\\trilt\\Desktop\\Laundry1902PRN212\\LaundryWPF\\Views\\ManageResources.xaml.cs",
+              "RelativeToolTip": "LaundryWPF\\Views\\ManageResources.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-02T19:30:30.635Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": ".gitignore",
-              "DocumentMoniker": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\.gitignore",
-              "RelativeDocumentMoniker": "LaundryWPF\\.gitignore",
-              "ToolTip": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\.gitignore",
-              "RelativeToolTip": "LaundryWPF\\.gitignore",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-10-29T13:27:44.541Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "RelayCommand.cs",
-              "DocumentMoniker": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\Helpers\\RelayCommand.cs",
-              "RelativeDocumentMoniker": "LaundryWPF\\Helpers\\RelayCommand.cs",
-              "ToolTip": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\Helpers\\RelayCommand.cs",
-              "RelativeToolTip": "LaundryWPF\\Helpers\\RelayCommand.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAyAAAAAAAAAA==",
+              "Title": "ManageResourcesViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\trilt\\Desktop\\Laundry1902PRN212\\LaundryWPF\\ViewModels\\ManageResourcesViewModel.cs",
+              "RelativeDocumentMoniker": "LaundryWPF\\ViewModels\\ManageResourcesViewModel.cs",
+              "ToolTip": "C:\\Users\\trilt\\Desktop\\Laundry1902PRN212\\LaundryWPF\\ViewModels\\ManageResourcesViewModel.cs",
+              "RelativeToolTip": "LaundryWPF\\ViewModels\\ManageResourcesViewModel.cs",
+              "ViewState": "AgIAAFkAAAAAAAAAAAAiwL0AAAA5AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-29T10:02:47.902Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "PageHome.xaml",
-              "DocumentMoniker": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\Views\\PageHome.xaml",
-              "RelativeDocumentMoniker": "LaundryWPF\\Views\\PageHome.xaml",
-              "ToolTip": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\Views\\PageHome.xaml",
-              "RelativeToolTip": "LaundryWPF\\Views\\PageHome.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-10-29T07:05:02.265Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "Sem7Prn212Context.cs",
-              "DocumentMoniker": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\Models\\Sem7Prn212Context.cs",
-              "RelativeDocumentMoniker": "LaundryWPF\\Models\\Sem7Prn212Context.cs",
-              "ToolTip": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\Models\\Sem7Prn212Context.cs",
-              "RelativeToolTip": "LaundryWPF\\Models\\Sem7Prn212Context.cs",
-              "ViewState": "AgIAAJ4AAAAAAAAAAAAswMYAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-24T00:57:52.42Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "OrderItem.cs",
-              "DocumentMoniker": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\Models\\OrderItem.cs",
-              "RelativeDocumentMoniker": "LaundryWPF\\Models\\OrderItem.cs",
-              "ToolTip": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\Models\\OrderItem.cs",
-              "RelativeToolTip": "LaundryWPF\\Models\\OrderItem.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-24T00:56:59.293Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "OrderManagementPage.xaml.cs",
-              "DocumentMoniker": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\Views\\OrderManagementPage.xaml.cs",
-              "RelativeDocumentMoniker": "LaundryWPF\\Views\\OrderManagementPage.xaml.cs",
-              "ToolTip": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\Views\\OrderManagementPage.xaml.cs",
-              "RelativeToolTip": "LaundryWPF\\Views\\OrderManagementPage.xaml.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAnwBoAAAA+AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-24T00:55:27.606Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Order.cs",
-              "DocumentMoniker": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\Models\\Order.cs",
-              "RelativeDocumentMoniker": "LaundryWPF\\Models\\Order.cs",
-              "ToolTip": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\Models\\Order.cs",
-              "RelativeToolTip": "LaundryWPF\\Models\\Order.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAA0wBcAAAAPAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-24T00:42:17.474Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "OrderManagementViewModel.cs",
-              "DocumentMoniker": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\ViewModels\\OrderManagementViewModel.cs",
-              "RelativeDocumentMoniker": "LaundryWPF\\ViewModels\\OrderManagementViewModel.cs",
-              "ToolTip": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\ViewModels\\OrderManagementViewModel.cs",
-              "RelativeToolTip": "LaundryWPF\\ViewModels\\OrderManagementViewModel.cs",
-              "ViewState": "AgIAAL8AAAAAAAAAAAAqwMUAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-23T23:21:32.529Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "DashboardWindow.xaml",
-              "DocumentMoniker": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\Views\\DashboardWindow.xaml",
-              "RelativeDocumentMoniker": "LaundryWPF\\Views\\DashboardWindow.xaml",
-              "ToolTip": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\Views\\DashboardWindow.xaml",
-              "RelativeToolTip": "LaundryWPF\\Views\\DashboardWindow.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-10-23T23:18:34.394Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "MainWindow.xaml",
-              "DocumentMoniker": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\MainWindow.xaml",
-              "RelativeDocumentMoniker": "LaundryWPF\\MainWindow.xaml",
-              "ToolTip": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\MainWindow.xaml",
-              "RelativeToolTip": "LaundryWPF\\MainWindow.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-10-23T23:18:30.608Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "App.xaml",
-              "DocumentMoniker": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\App.xaml",
-              "RelativeDocumentMoniker": "LaundryWPF\\App.xaml",
-              "ToolTip": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\App.xaml",
-              "RelativeToolTip": "LaundryWPF\\App.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-10-23T23:18:27.509Z",
+              "WhenOpened": "2025-11-02T18:52:04.503Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "OrderManagementPage.xaml",
-              "DocumentMoniker": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\Views\\OrderManagementPage.xaml",
-              "RelativeDocumentMoniker": "LaundryWPF\\Views\\OrderManagementPage.xaml",
-              "ToolTip": "F:\\quantrong\\hoc\\cnk7\\RE-PRN212\\Project\\Laundry1902\\LaundryWPF\\Views\\OrderManagementPage.xaml",
-              "RelativeToolTip": "LaundryWPF\\Views\\OrderManagementPage.xaml",
+              "Title": "ManageResources.xaml",
+              "DocumentMoniker": "C:\\Users\\trilt\\Desktop\\Laundry1902PRN212\\LaundryWPF\\Views\\ManageResources.xaml",
+              "RelativeDocumentMoniker": "LaundryWPF\\Views\\ManageResources.xaml",
+              "ToolTip": "C:\\Users\\trilt\\Desktop\\Laundry1902PRN212\\LaundryWPF\\Views\\ManageResources.xaml",
+              "RelativeToolTip": "LaundryWPF\\Views\\ManageResources.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-10-23T23:13:51.44Z",
+              "WhenOpened": "2025-11-02T18:51:54.973Z",
               "EditorCaption": ""
             }
           ]
