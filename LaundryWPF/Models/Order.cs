@@ -35,5 +35,5 @@ public partial class Order
 
     public virtual Service Service { get; set; } = null!;
 
-    public virtual Staff? Staff { get; set; } = null!;
+    public virtual Staff? Staff { get; set; }
 }

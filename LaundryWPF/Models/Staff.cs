@@ -17,5 +17,7 @@ public partial class Staff
 
     public decimal? Salary { get; set; }
 
+    public int? DayOff { get; set; }
+
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

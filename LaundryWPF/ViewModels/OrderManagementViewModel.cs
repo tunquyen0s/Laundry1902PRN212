@@ -120,7 +120,7 @@ namespace LaundryWPF.ViewModels
         // =================== LOAD DATA ===================
         private void LoadData()
         {
-            using var context = new Sem7Prn212Context();
+            using var context = new Prn212Context();
             AllCustomers = new ObservableCollection<Customer>(context.Customers.ToList());
             AllServices = new ObservableCollection<Service>(context.Services.ToList());
             AllStaff = new ObservableCollection<Staff>(context.Staff.ToList());
@@ -223,7 +223,7 @@ namespace LaundryWPF.ViewModels
                 return;
             }
 
-            using var context = new Sem7Prn212Context();
+            using var context = new Prn212Context();
 
             // Nếu là đơn mới (chưa có trong DB)
             if (SelectedOrder.OrderId == 0)
@@ -279,7 +279,7 @@ namespace LaundryWPF.ViewModels
             if (MessageBox.Show("Xác nhận xóa đơn hàng này?", "Xóa đơn hàng", MessageBoxButton.YesNo, MessageBoxImage.Warning)
                 == MessageBoxResult.No) return;
 
-            using var context = new Sem7Prn212Context();
+            using var context = new Prn212Context();
             var order = context.Orders.Include(o => o.OrderItems)
                                       .FirstOrDefault(o => o.OrderId == SelectedOrder.OrderId);
 
@@ -322,7 +322,7 @@ namespace LaundryWPF.ViewModels
     else
     {
         // Đơn hàng đã lưu DB → thêm thật vào DB
-        using var context = new Sem7Prn212Context();
+        using var context = new Prn212Context();
         var order = context.Orders.Include(o => o.OrderItems)
                                   .FirstOrDefault(o => o.OrderId == SelectedOrder.OrderId);
         if (order == null)
@@ -350,7 +350,7 @@ namespace LaundryWPF.ViewModels
                 return;
             }
 
-            using var context = new Sem7Prn212Context();
+            using var context = new Prn212Context();
             var item = context.OrderItems.FirstOrDefault(i => i.OrderItemId == SelectedOrderItem.OrderItemId);
             if (item == null)
             {
@@ -386,7 +386,7 @@ namespace LaundryWPF.ViewModels
             if (MessageBox.Show("Xác nhận xóa món này?", "Xóa món", MessageBoxButton.YesNo, MessageBoxImage.Warning)
                 == MessageBoxResult.No) return;
 
-            using var context = new Sem7Prn212Context();
+            using var context = new Prn212Context();
             var item = context.OrderItems.FirstOrDefault(i => i.OrderItemId == SelectedOrderItem.OrderItemId);
             if (item != null)
             {
@@ -417,7 +417,7 @@ namespace LaundryWPF.ViewModels
                                 MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                 return;
 
-            using var context = new Sem7Prn212Context();
+            using var context = new Prn212Context();
             var order = context.Orders.FirstOrDefault(o => o.OrderId == SelectedOrder.OrderId);
             if (order == null)
             {
