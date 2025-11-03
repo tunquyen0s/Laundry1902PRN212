@@ -1,18 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using Microsoft.EntityFrameworkCore;
 
 namespace LaundryWPF.Models;
 
-public partial class Sem7Prn212Context : DbContext
+public partial class Prn212Context : DbContext
 {
-    public Sem7Prn212Context()
+    public Prn212Context()
     {
     }
 
-    public Sem7Prn212Context(DbContextOptions<Sem7Prn212Context> options)
+    public Prn212Context(DbContextOptions<Prn212Context> options)
         : base(options)
     {
     }
@@ -29,33 +27,9 @@ public partial class Sem7Prn212Context : DbContext
 
     public virtual DbSet<Staff> Staff { get; set; }
 
-    private string GetConnectionString()
-    {
-        string currentDir = Directory.GetCurrentDirectory();
-        string appSettingsPath = Path.Combine(currentDir, "appsettings.json");
-
-        // Dòng code kiểm tra "sống còn"
-        if (!File.Exists(appSettingsPath))
-        {
-            throw new FileNotFoundException($"LỖI NGHIÊM TRỌNG: Không tìm thấy file appsettings.json tại đường dẫn '{appSettingsPath}'. Hãy đảm bảo file tồn tại và thuộc tính 'Copy to Output Directory' của nó được đặt là 'Copy if newer'.");
-        }
-
-        IConfiguration configuration = new ConfigurationBuilder()
-            .SetBasePath(currentDir)
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .Build();
-
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
-
-        if (string.IsNullOrEmpty(connectionString))
-        {
-            throw new InvalidOperationException("Không tìm thấy chuỗi kết nối 'DefaultConnection' bên trong file appsettings.json.");
-        }
-
-        return connectionString;
-    }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer(GetConnectionString());
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=UTA\\SQLEXPRESS;Database=PRN212;User Id=sa;Password=123;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -86,6 +60,14 @@ public partial class Sem7Prn212Context : DbContext
             entity.HasKey(e => e.OrderId).HasName("PK__Order__C3905BAF4B18EE30");
 
             entity.ToTable("Order");
+
+            entity.HasIndex(e => e.CustomerId, "IX_Order_CustomerID");
+
+            entity.HasIndex(e => e.ResourceId, "IX_Order_ResourceID");
+
+            entity.HasIndex(e => e.ServiceId, "IX_Order_ServiceID");
+
+            entity.HasIndex(e => e.StaffId, "IX_Order_StaffID");
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.CreateAt)
@@ -122,7 +104,6 @@ public partial class Sem7Prn212Context : DbContext
 
             entity.HasOne(d => d.Staff).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.StaffId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Order__StaffID__6477ECF3");
         });
 
@@ -131,6 +112,8 @@ public partial class Sem7Prn212Context : DbContext
             entity.HasKey(e => e.OrderItemId).HasName("PK__OrderIte__57ED06A1416FC287");
 
             entity.ToTable("OrderItem");
+
+            entity.HasIndex(e => e.OrderId, "IX_OrderItem_OrderID");
 
             entity.Property(e => e.OrderItemId).HasColumnName("OrderItemID");
             entity.Property(e => e.Description).HasMaxLength(255);
