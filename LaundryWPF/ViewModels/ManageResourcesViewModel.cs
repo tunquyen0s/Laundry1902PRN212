@@ -1,199 +1,155 @@
 ﻿using LaundryWPF.Helpers;
 using LaundryWPF.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace LaundryWPF.ViewModels
 {
     internal class ManageResourcesViewModel : BaseViewModel
     {
-        private readonly Sem7Prn212Context _context;
-
-        private Resource _selectedResource;
-        private string _searchText;
-
+        // 🔹 Thuộc tính chính
         public ObservableCollection<Resource> Resources { get; set; }
 
+        private Resource _selectedResource;
         public Resource SelectedResource
         {
             get => _selectedResource;
             set
             {
                 _selectedResource = value;
-                OnPropertyChanged();
-
-                if (value != null)
+                if (_selectedResource != null)
                 {
-                    Type = value.Type;
-                    Name = value.Name;
-                    Unit = value.Unit;
-                    Description = value.Description;
-                    PricePerUnit = value.PricePerUnit ?? 0;
-                    Quantity = value.Quantity ?? 0;
+                    TextBoxItem = new Resource
+                    {
+                        ResourceId = _selectedResource.ResourceId,
+                        Type = _selectedResource.Type,
+                        Name = _selectedResource.Name,
+                        Unit = _selectedResource.Unit,
+                        Description = _selectedResource.Description,
+                        PricePerUnit = _selectedResource.PricePerUnit,
+                        Quantity = _selectedResource.Quantity
+                    };
                 }
+                OnPropertyChanged(nameof(SelectedResource));
             }
         }
 
-        // 🔹 Thuộc tính cho form
-        private string _type;
-        public string Type { get => _type; set { _type = value; OnPropertyChanged(); } }
+        private Resource _textBoxItem;
+        public Resource TextBoxItem
+        {
+            get => _textBoxItem;
+            set { _textBoxItem = value; OnPropertyChanged(nameof(TextBoxItem)); }
+        }
 
-        private string _name;
-        public string Name { get => _name; set { _name = value; OnPropertyChanged(); } }
-
-        private string _unit;
-        public string Unit { get => _unit; set { _unit = value; OnPropertyChanged(); } }
-
-        private string _description;
-        public string Description { get => _description; set { _description = value; OnPropertyChanged(); } }
-
-        private decimal _pricePerUnit;
-        public decimal PricePerUnit { get => _pricePerUnit; set { _pricePerUnit = value; OnPropertyChanged(); } }
-
-        private decimal _quantity;
-        public decimal Quantity { get => _quantity; set { _quantity = value; OnPropertyChanged(); } }
-
-        public ObservableCollection<string> UnitOptions { get; set; }
+        private string _searchText;
         public string SearchText
         {
             get => _searchText;
-            set { _searchText = value; OnPropertyChanged(); }
+            set { _searchText = value; OnPropertyChanged(nameof(SearchText)); }
         }
+
+        public ObservableCollection<string> UnitOptions { get; set; }
 
         // 🔹 Command
         public ICommand AddCommand { get; }
         public ICommand UpdateCommand { get; }
         public ICommand DeleteCommand { get; }
-        public ICommand ClearCommand { get; }
         public ICommand SearchCommand { get; }
-        public ICommand RefreshCommand { get; }
 
+        // 🔹 Constructor
         public ManageResourcesViewModel()
         {
-            _context = new Sem7Prn212Context();
-            Resources = new ObservableCollection<Resource>(_context.Resources.ToList());
-
+            Load();
+            TextBoxItem = new Resource();
             UnitOptions = new ObservableCollection<string> { "Kg", "Lít" };
-            Unit = UnitOptions.First();
-            AddCommand = new RelayCommand(_ => AddResource());
-            UpdateCommand = new RelayCommand(_ => UpdateResource(), _ => SelectedResource != null);
-            DeleteCommand = new RelayCommand(_ => DeleteResource(), _ => SelectedResource != null);
-            ClearCommand = new RelayCommand(_ => ClearFields());
-            SearchCommand = new RelayCommand(_ => SearchResource());
-            RefreshCommand = new RelayCommand(_ => LoadResources());
-            LoadResources();
+
+            AddCommand = new RelayCommand(Add);
+            UpdateCommand = new RelayCommand(Update);
+            DeleteCommand = new RelayCommand(Delete);
+            SearchCommand = new RelayCommand(Search);
+
+
+            Application.Current.Dispatcher.InvokeAsync(async () =>
+            {
+                await Task.Delay(500); // chờ 1.5s để UI render xong
+                CheckQuantityOfResources();
+            }, DispatcherPriority.ContextIdle);
+
         }
 
-        #region CRUD logic
-
-        private void LoadResources()
+        // 🔹 Load danh sách
+        private void Load()
         {
-            try
+            using (var context = new Sem7Prn212Context())
             {
-                Resources.Clear();
-
-                var lowStockItems = new List<string>();
-
-                foreach (var r in _context.Resources)
-                {
-                    Resources.Add(r);
-
-                    // Kiểm tra hàng sắp hết
-                    if (r.Quantity.HasValue && r.Quantity.Value < 3)
-                    {
-                        lowStockItems.Add($"{r.Name} (SL: {r.Quantity})");
-                    }
-                }
-
-                // Nếu có ít nhất 1 item sắp hết hàng
-                if (lowStockItems.Any())
-                {
-                    string message = "⚠ Các tài nguyên sắp hết hàng:\n" +
-                                     string.Join("\n", lowStockItems);
-                    MessageBox.Show(message, "Cảnh báo tồn kho thấp",
-                                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"❌ Lỗi khi tải danh sách tài nguyên:\n{ex.Message}",
-                                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                var list = context.Resources.ToList();
+                Resources = new ObservableCollection<Resource>(list);
             }
         }
 
-
-        private void AddResource()
+        private void CheckQuantityOfResources()
         {
-            try
+        
+            using (var context = new Sem7Prn212Context())
             {
-
-                // Kiểm tra rỗng
-                if (string.IsNullOrWhiteSpace(Name))
+                var lowStockResources = context.Resources
+                    .Where(r => r.Quantity < 3 && r.Unit == "Kg")
+                    .ToList();
+                var lowStockResourcesLit = context.Resources
+                    .Where(r => r.Quantity < 5 && r.Unit == "Lít")
+                    .ToList();
+                foreach (var res in lowStockResources)
                 {
-                    MessageBox.Show("⚠ Vui lòng nhập tên tài nguyên.", "Thiếu dữ liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
+                    MessageBox.Show(
+                        $"⚠ Tài nguyên '{res.Name}' chỉ còn {res.Quantity} {res.Unit} trong kho. Vui lòng bổ sung!",
+                        "Cảnh báo tồn kho thấp", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
-
-                // ✅ Kiểm tra Quantity có phải số hợp lệ không
-                if (!decimal.TryParse(Quantity.ToString(), out decimal qty))
+                foreach (var res in lowStockResourcesLit)
                 {
-                    MessageBox.Show("⚠ Quantity phải là số hợp lệ.", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
+                    MessageBox.Show(
+                        $"⚠ Tài nguyên '{res.Name}' chỉ còn {res.Quantity} {res.Unit} trong kho. Vui lòng bổ sung!",
+                        "Cảnh báo tồn kho thấp", MessageBoxButton.OK, MessageBoxImage.Warning);
+
                 }
-
-                // ✅ Kiểm tra PricePerUnit có phải số hợp lệ không
-                if (!decimal.TryParse(PricePerUnit.ToString(), out decimal price))
-                {
-                    MessageBox.Show("⚠ Price per unit phải là số hợp lệ.", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                // ✅ Kiểm tra âm
-                if (qty < 0)
-                {
-                    MessageBox.Show("⚠ Quantity không thể nhỏ hơn 0.", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-                if (price < 0)
-                {
-                    MessageBox.Show("⚠ Price per unit không thể nhỏ hơn 0.", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                var newRes = new Resource
-                {
-                    Type = Type,
-                    Name = Name,
-                    Unit = Unit,
-                    Description = Description,
-                    PricePerUnit = price,
-                    Quantity = qty
-                };
-
-                _context.Resources.Add(newRes);
-                _context.SaveChanges();
-                Resources.Add(newRes);
-
-                MessageBox.Show("✅ Thêm tài nguyên thành công!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                ClearFields();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"❌ Lỗi khi thêm tài nguyên:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-
-                // 🔁 Reset lại EF Context nếu entity lỗi
-                _context.ChangeTracker.Clear();
             }
         }
+        // 🔹 Thêm dữ liệu (async)
+        private async void Add(object obj)
+        {
+            var newRes = new Resource
+            {
+                Type = TextBoxItem.Type,
+                Name = TextBoxItem.Name,
+                Unit = TextBoxItem.Unit,
+                Description = TextBoxItem.Description,
+                PricePerUnit = TextBoxItem.PricePerUnit,
+                Quantity = TextBoxItem.Quantity
+            };
 
+            // Kiểm tra validation annotation
+            if (!ValidateResource(newRes)) return;
 
-        private void UpdateResource()
+            using (var context = new Sem7Prn212Context())
+            {
+                context.Resources.Add(newRes);
+                await context.SaveChangesAsync();
+            }
+
+            await RefreshResourcesAsync();
+            TextBoxItem = new Resource();
+            MessageBox.Show("✅ Thêm tài nguyên thành công!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        // 🔹 Cập nhật dữ liệu
+        private async void Update(object obj)
         {
             if (SelectedResource == null)
             {
@@ -201,67 +157,22 @@ namespace LaundryWPF.ViewModels
                 return;
             }
 
-            try
+            // Kiểm tra dữ liệu trước khi cập nhật
+            if (!ValidateResource(TextBoxItem)) return;
+
+            using (var context = new Sem7Prn212Context())
             {
-                // 🔹 Kiểm tra dữ liệu nhập
-                if (string.IsNullOrWhiteSpace(Name))
-                {
-                    MessageBox.Show("⚠ Vui lòng nhập tên tài nguyên.", "Thiếu dữ liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                // 🔹 Kiểm tra số lượng hợp lệ
-                if (!decimal.TryParse(Quantity.ToString(), out decimal qty))
-                {
-                    MessageBox.Show("⚠ Quantity phải là số hợp lệ.", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                // 🔹 Kiểm tra giá hợp lệ
-                if (!decimal.TryParse(PricePerUnit.ToString(), out decimal price))
-                {
-                    MessageBox.Show("⚠ Price per unit phải là số hợp lệ.", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                // 🔹 Kiểm tra âm
-                if (qty < 0)
-                {
-                    MessageBox.Show("⚠ Quantity không thể nhỏ hơn 0.", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-                if (price < 0)
-                {
-                    MessageBox.Show("⚠ Price per unit không thể nhỏ hơn 0.", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                // 🔹 Lấy resource từ DB và cập nhật
-                var res = _context.Resources.FirstOrDefault(r => r.ResourceId == SelectedResource.ResourceId);
-                if (res != null)
-                {
-                    res.Type = Type;
-                    res.Name = Name;
-                    res.Unit = Unit;
-                    res.Description = Description;
-                    res.PricePerUnit = price;
-                    res.Quantity = qty;
-
-                    _context.SaveChanges();
-                    LoadResources();
-
-                    MessageBox.Show("🔄 Cập nhật thành công!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
+                context.Resources.Update(TextBoxItem);
+                await context.SaveChangesAsync();
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"❌ Lỗi khi cập nhật:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                _context.ChangeTracker.Clear(); // rollback nếu lỗi EF
-            }
+
+            await RefreshResourcesAsync();
+            TextBoxItem = new Resource();
+            MessageBox.Show("🔄 Cập nhật thành công!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-
-        private void DeleteResource()
+        // 🔹 Xóa dữ liệu
+        private async void Delete(object obj)
         {
             if (SelectedResource == null)
             {
@@ -269,59 +180,65 @@ namespace LaundryWPF.ViewModels
                 return;
             }
 
-            var confirm = MessageBox.Show($"Xóa tài nguyên '{SelectedResource.Name}'?",
-                                          "Xác nhận xóa", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            var confirm = MessageBox.Show(
+                $"Bạn có chắc chắn muốn xóa '{SelectedResource.Name}'?",
+                "Xác nhận xóa", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (confirm != MessageBoxResult.Yes) return;
 
-            try
+            using (var context = new Sem7Prn212Context())
             {
-                _context.Resources.Remove(SelectedResource);
-                _context.SaveChanges();
-                Resources.Remove(SelectedResource);
-                ClearFields();
+                context.Resources.Remove(SelectedResource);
+                await context.SaveChangesAsync();
+            }
 
-                MessageBox.Show("🗑 Xóa thành công!", "Deleted", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"❌ Lỗi khi xóa:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            await RefreshResourcesAsync();
+            TextBoxItem = new Resource();
+            MessageBox.Show("🗑 Xóa thành công!", "Deleted", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        private void SearchResource()
+        // 🔹 Tìm kiếm
+        private void Search(object obj)
         {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(SearchText))
-                {
-                    LoadResources();
-                    return;
-                }
+            var query = _searchText?.Trim().ToLower() ?? "";
 
-                var results = _context.Resources
-                    .Where(r => r.Name.Contains(SearchText) || r.Type.Contains(SearchText))
-                    .ToList();
+            using var context = new Sem7Prn212Context();
+            var filtered = context.Resources
+                .Where(r => r.Name.ToLower().Contains(query) || r.Type.ToLower().Contains(query))
+                .ToList();
 
-                Resources.Clear();
-                foreach (var r in results)
-                    Resources.Add(r);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"❌ Lỗi khi tìm kiếm:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            Resources.Clear();
+            foreach (var item in filtered)
+                Resources.Add(item);
         }
 
-        private void ClearFields()
+        // 🔹 Refresh danh sách
+        public async Task RefreshResourcesAsync()
         {
-            Type = Name = Unit = Description = string.Empty;
-            PricePerUnit = 0;
-            Quantity = 0;
-              Unit = UnitOptions.First();
-            SelectedResource = null;
+            using var context = new Sem7Prn212Context();
+            var list = await context.Resources.ToListAsync();
+
+            Resources.Clear();
+            foreach (var item in list)
+                Resources.Add(item);
+
+            OnPropertyChanged(nameof(Resources));
         }
 
-        #endregion
+        // 🔹 Validation Annotation
+        private bool ValidateResource(Resource res)
+        {
+            var context = new ValidationContext(res, serviceProvider: null, items: null);
+            var results = new List<ValidationResult>();
+
+            bool isValid = Validator.TryValidateObject(res, context, results, validateAllProperties: true);
+            if (!isValid)
+            {
+                string errors = string.Join("\n", results.Select(r => $"• {r.ErrorMessage}"));
+                MessageBox.Show(errors, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+
+            return isValid;
+        }
     }
 }
