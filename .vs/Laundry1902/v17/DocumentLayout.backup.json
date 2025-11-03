@@ -7,16 +7,12 @@
       "RelativeMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|solutionrelative:laundrywpf\\views\\manageresources.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|c:\\users\\trilt\\desktop\\laundry1902prn212\\laundrywpf\\viewmodels\\baseviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|solutionrelative:laundrywpf\\viewmodels\\baseviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|c:\\users\\trilt\\desktop\\laundry1902prn212\\laundrywpf\\viewmodels\\manageresourcesviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|solutionrelative:laundrywpf\\viewmodels\\manageresourcesviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|c:\\users\\trilt\\desktop\\laundry1902prn212\\laundrywpf\\views\\manageresources.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|solutionrelative:laundrywpf\\views\\manageresources.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|c:\\users\\trilt\\desktop\\laundry1902prn212\\laundrywpf\\models\\resource.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8A9BB98F-AF85-499B-A670-5E7DD7070C64}|LaundryWPF\\LaundryWPF.csproj|solutionrelative:laundrywpf\\models\\resource.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,8 +22,34 @@
       "DocumentGroups": [
         {
           "DockedHeight": 438,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ManageResourcesViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\trilt\\Desktop\\Laundry1902PRN212\\LaundryWPF\\ViewModels\\ManageResourcesViewModel.cs",
+              "RelativeDocumentMoniker": "LaundryWPF\\ViewModels\\ManageResourcesViewModel.cs",
+              "ToolTip": "C:\\Users\\trilt\\Desktop\\Laundry1902PRN212\\LaundryWPF\\ViewModels\\ManageResourcesViewModel.cs",
+              "RelativeToolTip": "LaundryWPF\\ViewModels\\ManageResourcesViewModel.cs",
+              "ViewState": "AgIAAL0AAAAAAAAAAAAwwOoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T02:42:59.3Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "BaseViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\trilt\\Desktop\\Laundry1902PRN212\\LaundryWPF\\ViewModels\\BaseViewModel.cs",
+              "RelativeDocumentMoniker": "LaundryWPF\\ViewModels\\BaseViewModel.cs",
+              "ToolTip": "C:\\Users\\trilt\\Desktop\\Laundry1902PRN212\\LaundryWPF\\ViewModels\\BaseViewModel.cs",
+              "RelativeToolTip": "LaundryWPF\\ViewModels\\BaseViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T02:05:27.863Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -38,45 +60,6 @@
               "RelativeToolTip": "LaundryWPF\\Views\\ManageResources.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-11-02T18:51:54.973Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Resource.cs",
-              "DocumentMoniker": "C:\\Users\\trilt\\Desktop\\Laundry1902PRN212\\LaundryWPF\\Models\\Resource.cs",
-              "RelativeDocumentMoniker": "LaundryWPF\\Models\\Resource.cs",
-              "ToolTip": "C:\\Users\\trilt\\Desktop\\Laundry1902PRN212\\LaundryWPF\\Models\\Resource.cs",
-              "RelativeToolTip": "LaundryWPF\\Models\\Resource.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAA6AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-03T00:22:03.18Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ManageResources.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\trilt\\Desktop\\Laundry1902PRN212\\LaundryWPF\\Views\\ManageResources.xaml.cs",
-              "RelativeDocumentMoniker": "LaundryWPF\\Views\\ManageResources.xaml.cs",
-              "ToolTip": "C:\\Users\\trilt\\Desktop\\Laundry1902PRN212\\LaundryWPF\\Views\\ManageResources.xaml.cs",
-              "RelativeToolTip": "LaundryWPF\\Views\\ManageResources.xaml.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABoAAAA5AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-02T19:30:30.635Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ManageResourcesViewModel.cs",
-              "DocumentMoniker": "C:\\Users\\trilt\\Desktop\\Laundry1902PRN212\\LaundryWPF\\ViewModels\\ManageResourcesViewModel.cs",
-              "RelativeDocumentMoniker": "LaundryWPF\\ViewModels\\ManageResourcesViewModel.cs",
-              "ToolTip": "C:\\Users\\trilt\\Desktop\\Laundry1902PRN212\\LaundryWPF\\ViewModels\\ManageResourcesViewModel.cs",
-              "RelativeToolTip": "LaundryWPF\\ViewModels\\ManageResourcesViewModel.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAABFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-02T18:52:04.503Z",
               "EditorCaption": ""
             }
           ]

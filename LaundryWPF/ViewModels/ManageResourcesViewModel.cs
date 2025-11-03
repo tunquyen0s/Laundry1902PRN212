@@ -101,23 +101,13 @@ namespace LaundryWPF.ViewModels
             using (var context = new Sem7Prn212Context())
             {
                 var lowStockResources = context.Resources
-                    .Where(r => r.Quantity < 3 && r.Unit == "Kg")
-                    .ToList();
-                var lowStockResourcesLit = context.Resources
-                    .Where(r => r.Quantity < 5 && r.Unit == "Lít")
+                    .Where(r => r.Quantity < 3)
                     .ToList();
                 foreach (var res in lowStockResources)
                 {
                     MessageBox.Show(
                         $"⚠ Tài nguyên '{res.Name}' chỉ còn {res.Quantity} {res.Unit} trong kho. Vui lòng bổ sung!",
                         "Cảnh báo tồn kho thấp", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-                foreach (var res in lowStockResourcesLit)
-                {
-                    MessageBox.Show(
-                        $"⚠ Tài nguyên '{res.Name}' chỉ còn {res.Quantity} {res.Unit} trong kho. Vui lòng bổ sung!",
-                        "Cảnh báo tồn kho thấp", MessageBoxButton.OK, MessageBoxImage.Warning);
-
                 }
             }
         }
