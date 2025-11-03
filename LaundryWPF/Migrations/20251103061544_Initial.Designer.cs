@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LaundryWPF.Migrations
 {
     [DbContext(typeof(Prn212Context))]
-    [Migration("20251103003350_Initial")]
+    [Migration("20251103061544_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

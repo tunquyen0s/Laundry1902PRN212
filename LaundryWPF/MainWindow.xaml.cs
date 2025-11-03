@@ -25,7 +25,7 @@ namespace LaundryWPF
         private void OpenLaundryWindow_Click(object sender, RoutedEventArgs e)
         {
             string pin = PinBox.Password;
-            if (pin != "1234")
+            if (pin != "1111")
             {
                 MessageBox.Show("Mã PIN không đúng. Vui lòng thử lại!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 PinBox.Clear();
