@@ -5,7 +5,7 @@ namespace LaundryWPF.Models;
 
 public partial class Staff
 {
-    public int StaffId { get; set; }
+    public int? StaffId { get; set; } 
 
     public string Name { get; set; } = null!;
 

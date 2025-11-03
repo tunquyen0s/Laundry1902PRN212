@@ -54,7 +54,9 @@ namespace LaundryWPF.Views
 
         private void BtnAbout_Click(object sender, RoutedEventArgs e)
         {
-      //      MainFrame.Navigate(new PageAbout());
+            Staff.StaffManageWindow StaffManageWindow = new Staff.StaffManageWindow();
+            StaffManageWindow.Show();
+            this.Hide();
         }
 
         private void MainFrame_ContentRendered(object sender, System.EventArgs e)

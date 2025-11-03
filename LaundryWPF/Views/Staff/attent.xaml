@@ -1,0 +1,99 @@
+﻿<Page x:Class="LaundryWPF.Views.Staff.attent"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:LaundryWPF.Views.Staff"
+      mc:Ignorable="d"
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="attent">
+
+    <!-- GRID CHA -->
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Hàng trên -->
+            <RowDefinition Height="*"/>
+            <!-- Hàng dưới -->
+        </Grid.RowDefinitions>
+
+        <!-- ========== PHẦN 1: THANH TIÊU ĐỀ / TÌM KIẾM ========== -->
+        <Grid Grid.Row="0" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Danh sách nhân viên"
+                       FontSize="20"
+                       FontWeight="Bold"
+                       VerticalAlignment="Center"
+                       Foreground="#333"/>
+
+            <!-- Ô tìm kiếm (tùy chọn) -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+
+                <Button x:Name="btnResetAll"
+Content="làm mới"
+Width="120"
+Height="30"
+Command="{Binding ResetDayOffCommand}" />
+            </StackPanel>
+        </Grid>
+
+        <!-- ========== PHẦN 2: BẢNG DỮ LIỆU ========== -->
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding Staffs}"
+                  AutoGenerateColumns="False"
+                  SelectedItem="{Binding selecteditem, Mode=OneWayToSource}"
+                  IsReadOnly="True"
+                  SelectionMode="Single"
+                  AlternatingRowBackground="#FFEAF4FF"
+                  RowBackground="White"
+                  HeadersVisibility="Column"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Staff ID" Binding="{Binding StaffId}" Width="100"/>
+                <DataGridTextColumn Header="Tên" Binding="{Binding Name}" Width="150"/>
+                <DataGridTextColumn Header="SĐT" Binding="{Binding PhoneNumber}" Width="150"/>
+                <DataGridTextColumn Header="Ngày nghỉ" Binding="{Binding DayOff}" Width="120"/>
+
+                <!-- Cột nút Attent -->
+                <DataGridTemplateColumn Header="Thao tác" Width="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <!-- Nút Nghỉ -->
+                                <Button Content="Nghỉ"
+                                        Width="60"
+                                        Height="30"
+                                        Background="#FF3366CC"
+                                        Foreground="White"
+                                        FontWeight="Bold"
+                                        Cursor="Hand"
+                                        Command="{Binding DataContext.AttentCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding}" />
+
+                                <!-- Nút Giảm -->
+                                <Button Content="-"
+                                        Width="40"
+                                        Height="30"
+                                        Background="#FFCC3333"
+                                        Foreground="White"
+                                        FontWeight="Bold"
+                                        Cursor="Hand"
+                                        Command="{Binding DataContext.DeAttentCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </Grid>
+</Page>
