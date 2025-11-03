@@ -7,11 +7,11 @@ public partial class Order
 {
     public int OrderId { get; set; }
 
-    public int CustomerId { get; set; }
+    public int? CustomerId { get; set; }
 
     public int? ResourceId { get; set; }
 
-    public int ServiceId { get; set; }
+    public int? ServiceId { get; set; }
 
     public decimal? TotalPrice { get; set; }
 
@@ -27,13 +27,13 @@ public partial class Order
 
     public DateTime? UpdateAt { get; set; }
 
-    public virtual Customer Customer { get; set; } = null!;
+    public virtual Customer? Customer { get; set; } = null!;
 
-    public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+    public virtual ICollection<OrderItem>? OrderItems { get; set; } = new List<OrderItem>();
 
     public virtual Resource? Resource { get; set; }
 
-    public virtual Service Service { get; set; } = null!;
+    public virtual Service? Service { get; set; } = null!;
 
     public virtual Staff? Staff { get; set; } = null!;
 }

@@ -1,8 +1,6 @@
 ﻿using LaundryWPF.Helpers;
 using LaundryWPF.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -13,13 +11,13 @@ namespace LaundryWPF.ViewModels
     public class OrderManagementViewModel : BaseViewModel
     {
         // =================== DỮ LIỆU NGUỒN ===================
-        private List<Order> _allOrders;
-        public ObservableCollection<Order> Orders { get; set; }
-        public ObservableCollection<Customer> AllCustomers { get; set; }
-        public ObservableCollection<Service> AllServices { get; set; }
-        public ObservableCollection<Staff> AllStaff { get; set; }
-        public ObservableCollection<Resource> AllResources { get; set; }
-        public ObservableCollection<OrderItem> NewOrderItems { get; set; }
+        private List<Order> _allOrders = new();
+        public ObservableCollection<Order> Orders { get; set; } = new();
+        public ObservableCollection<Customer> AllCustomers { get; set; } = new();
+        public ObservableCollection<Service> AllServices { get; set; } = new();
+        public ObservableCollection<Staff> AllStaff { get; set; } = new();
+        public ObservableCollection<Resource> AllResources { get; set; } = new();
+        public ObservableCollection<OrderItem> NewOrderItems { get; set; } = new();
 
         // =================== FILTER ===================
         private bool _showCompletedOrders;
@@ -38,7 +36,8 @@ namespace LaundryWPF.ViewModels
             {
                 _selectedOrder = value;
                 OnPropertyChanged();
-                if (value != null) MapOrderToForm();
+                if (value != null)
+                    MapOrderToForm();
                 CommandManager.InvalidateRequerySuggested();
             }
         }
@@ -51,36 +50,37 @@ namespace LaundryWPF.ViewModels
             {
                 _selectedOrderItem = value;
                 OnPropertyChanged();
-                if (value != null) MapOrderItemToForm();
+                if (value != null)
+                    MapOrderItemToForm();
                 CommandManager.InvalidateRequerySuggested();
             }
         }
 
         // =================== FORM ORDER ===================
-        private Customer _selectedCustomer;
         public Customer SelectedCustomer { get => _selectedCustomer; set { _selectedCustomer = value; OnPropertyChanged(); } }
+        private Customer _selectedCustomer;
 
-        private Service _selectedService;
         public Service SelectedService { get => _selectedService; set { _selectedService = value; OnPropertyChanged(); } }
+        private Service _selectedService;
 
-        private Staff _selectedStaff;
         public Staff SelectedStaff { get => _selectedStaff; set { _selectedStaff = value; OnPropertyChanged(); } }
+        private Staff _selectedStaff;
 
-        private Resource _selectedResource;
         public Resource SelectedResource { get => _selectedResource; set { _selectedResource = value; OnPropertyChanged(); } }
+        private Resource _selectedResource;
 
-        private double? _weight;
         public double? Weight { get => _weight; set { _weight = value; OnPropertyChanged(); } }
+        private double? _weight;
 
         // =================== FORM ITEM ===================
-        private string _newItemName;
         public string NewItemName { get => _newItemName; set { _newItemName = value; OnPropertyChanged(); } }
+        private string _newItemName;
 
-        private int? _newItemQuantity;
         public int? NewItemQuantity { get => _newItemQuantity; set { _newItemQuantity = value; OnPropertyChanged(); } }
+        private int? _newItemQuantity;
 
-        private string _newItemDescription;
         public string NewItemDescription { get => _newItemDescription; set { _newItemDescription = value; OnPropertyChanged(); } }
+        private string _newItemDescription;
 
         // =================== COMMANDS ===================
         public ICommand CreateOrderCommand { get; }
@@ -89,32 +89,22 @@ namespace LaundryWPF.ViewModels
         public ICommand AddItemCommand { get; }
         public ICommand UpdateItemCommand { get; }
         public ICommand DeleteItemCommand { get; }
-
         public ICommand CompleteOrderCommand { get; }
 
         // =================== CONSTRUCTOR ===================
         public OrderManagementViewModel()
         {
-            _allOrders = new List<Order>();
-            Orders = new ObservableCollection<Order>();
-            AllCustomers = new ObservableCollection<Customer>();
-            AllServices = new ObservableCollection<Service>();
-            AllStaff = new ObservableCollection<Staff>();
-            AllResources = new ObservableCollection<Resource>();
-            NewOrderItems = new ObservableCollection<OrderItem>();
+            CreateOrderCommand = new RelayCommand(_ => ExecuteCreateOrder());
+            SaveOrderCommand = new RelayCommand(_ => ExecuteSaveOrder());
+            DeleteOrderCommand = new RelayCommand(_ => ExecuteDeleteOrder(), _ => SelectedOrder != null);
 
-            CreateOrderCommand = new RelayCommand(obj => ExecuteCreateOrder(obj));
-            SaveOrderCommand = new RelayCommand(obj => ExecuteSaveOrder(obj));
-            DeleteOrderCommand = new RelayCommand(obj => ExecuteDeleteOrder(obj), obj => SelectedOrder != null);
+            AddItemCommand = new RelayCommand(_ => ExecuteAddItem());
+            UpdateItemCommand = new RelayCommand(_ => ExecuteUpdateItem(), _ => SelectedOrderItem != null);
+            DeleteItemCommand = new RelayCommand(_ => ExecuteDeleteItem(), _ => SelectedOrderItem != null);
 
-            AddItemCommand = new RelayCommand(obj => ExecuteAddItem());
-            UpdateItemCommand = new RelayCommand(obj => ExecuteUpdateItem(), obj => SelectedOrderItem != null);
-            DeleteItemCommand = new RelayCommand(obj => ExecuteDeleteItem(), obj => SelectedOrderItem != null);
-
-            CompleteOrderCommand = new RelayCommand(obj => ExecuteCompleteOrder(), obj => SelectedOrder != null && SelectedOrder.OrderId > 0);
+            CompleteOrderCommand = new RelayCommand(_ => ExecuteCompleteOrder(), _ => SelectedOrder != null && SelectedOrder.OrderId > 0);
 
             LoadData();
-            CommandManager.InvalidateRequerySuggested();
         }
 
         // =================== LOAD DATA ===================
@@ -140,7 +130,9 @@ namespace LaundryWPF.ViewModels
         private void ApplyFilter()
         {
             Orders.Clear();
-            var filtered = ShowCompletedOrders ? _allOrders : _allOrders.Where(o => o.Status != "Completed");
+            var filtered = ShowCompletedOrders
+                ? _allOrders
+                : _allOrders.Where(o => o.Status != "Completed");
             foreach (var o in filtered)
                 Orders.Add(o);
         }
@@ -148,7 +140,11 @@ namespace LaundryWPF.ViewModels
         // =================== MAPPING ===================
         private void MapOrderToForm()
         {
-            if (SelectedOrder == null) { ClearForm(); return; }
+            if (SelectedOrder == null)
+            {
+                ClearForm();
+                return;
+            }
 
             SelectedCustomer = AllCustomers.FirstOrDefault(c => c.CustomerId == SelectedOrder.CustomerId);
             SelectedService = AllServices.FirstOrDefault(s => s.ServiceId == SelectedOrder.ServiceId);
@@ -157,15 +153,20 @@ namespace LaundryWPF.ViewModels
             Weight = SelectedOrder.Weight;
 
             NewOrderItems.Clear();
-            foreach (var item in SelectedOrder.OrderItems)
-                NewOrderItems.Add(new OrderItem
+            if (SelectedOrder.OrderItems != null)
+            {
+                foreach (var item in SelectedOrder.OrderItems)
                 {
-                    OrderItemId = item.OrderItemId,
-                    OrderId = item.OrderId,
-                    Name = item.Name,
-                    Quantity = item.Quantity,
-                    Description = item.Description
-                });
+                    NewOrderItems.Add(new OrderItem
+                    {
+                        OrderItemId = item.OrderItemId,
+                        OrderId = item.OrderId,
+                        Name = item.Name,
+                        Quantity = item.Quantity,
+                        Description = item.Description
+                    });
+                }
+            }
         }
 
         private void MapOrderItemToForm()
@@ -178,7 +179,6 @@ namespace LaundryWPF.ViewModels
 
         private void ClearForm()
         {
-            SelectedOrder = null;
             SelectedCustomer = null;
             SelectedService = null;
             SelectedStaff = null;
@@ -197,9 +197,8 @@ namespace LaundryWPF.ViewModels
         }
 
         // =================== CRUD ORDER ===================
-        private void ExecuteCreateOrder(object obj)
+        private void ExecuteCreateOrder()
         {
-            // Tạo đơn hàng tạm, chưa lưu DB
             var newOrder = new Order
             {
                 Status = "Processing",
@@ -208,44 +207,47 @@ namespace LaundryWPF.ViewModels
                 OrderItems = new List<OrderItem>()
             };
 
-            // Gán làm SelectedOrder, hiển thị trên giao diện
+            Orders.Insert(0, newOrder);
             SelectedOrder = newOrder;
             NewOrderItems.Clear();
 
             MessageBox.Show("Đã tạo đơn hàng mới (chưa lưu vào cơ sở dữ liệu)!");
         }
 
-        private void ExecuteSaveOrder(object obj)
+        private void ExecuteSaveOrder()
         {
+            using var context = new Sem7Prn212Context();
+
             if (SelectedCustomer == null || SelectedService == null)
             {
-                MessageBox.Show("Vui lòng chọn khách hàng và dịch vụ!");
+                MessageBox.Show("Vui lòng chọn khách hàng và dịch vụ trước khi lưu!");
                 return;
             }
 
-            using var context = new Sem7Prn212Context();
+            int savedOrderId = SelectedOrder?.OrderId ?? 0;
 
-            // Nếu là đơn mới (chưa có trong DB)
-            if (SelectedOrder.OrderId == 0)
+            if (savedOrderId == 0)
             {
+                // === Lưu đơn hàng mới ===
                 SelectedOrder.CustomerId = SelectedCustomer.CustomerId;
                 SelectedOrder.ServiceId = SelectedService.ServiceId;
                 SelectedOrder.StaffId = SelectedStaff?.StaffId;
                 SelectedOrder.ResourceId = SelectedResource?.ResourceId;
                 SelectedOrder.Weight = Weight;
-                SelectedOrder.UpdateAt = DateTime.Now;
                 SelectedOrder.TotalPrice = SelectedService.PricePerUnit * (decimal)(Weight ?? 1.0);
+                SelectedOrder.UpdateAt = DateTime.Now;
 
                 context.Orders.Add(SelectedOrder);
                 context.SaveChanges();
 
+                savedOrderId = SelectedOrder.OrderId;
                 MessageBox.Show("Đã lưu đơn hàng mới vào cơ sở dữ liệu!");
             }
             else
             {
-                // Đơn hàng đã tồn tại → cập nhật
+                // === Cập nhật đơn hàng có sẵn ===
                 var order = context.Orders.Include(o => o.OrderItems)
-                                          .FirstOrDefault(o => o.OrderId == SelectedOrder.OrderId);
+                                          .FirstOrDefault(o => o.OrderId == savedOrderId);
                 if (order == null) return;
 
                 order.CustomerId = SelectedCustomer.CustomerId;
@@ -261,14 +263,10 @@ namespace LaundryWPF.ViewModels
             }
 
             LoadData();
-            SelectedOrder = Orders.FirstOrDefault(o => o.OrderId == SelectedOrder.OrderId);
+            SelectedOrder = Orders.FirstOrDefault(o => o.OrderId == savedOrderId);
         }
 
-
-
-
-
-        private void ExecuteDeleteOrder(object obj)
+        private void ExecuteDeleteOrder()
         {
             if (SelectedOrder == null)
             {
@@ -276,8 +274,8 @@ namespace LaundryWPF.ViewModels
                 return;
             }
 
-            if (MessageBox.Show("Xác nhận xóa đơn hàng này?", "Xóa đơn hàng", MessageBoxButton.YesNo, MessageBoxImage.Warning)
-                == MessageBoxResult.No) return;
+            if (MessageBox.Show("Xác nhận xóa đơn hàng này?", "Xóa đơn hàng", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                return;
 
             using var context = new Sem7Prn212Context();
             var order = context.Orders.Include(o => o.OrderItems)
@@ -288,59 +286,56 @@ namespace LaundryWPF.ViewModels
                 context.OrderItems.RemoveRange(order.OrderItems);
                 context.Orders.Remove(order);
                 context.SaveChanges();
-
-                LoadData();
-                SelectedOrder = null;
                 MessageBox.Show("Đã xóa đơn hàng!");
             }
-        }
 
+            LoadData();
+            SelectedOrder = null;
+        }
 
         // =================== CRUD ITEM ===================
-      private void ExecuteAddItem()
-{
-    if (SelectedOrder == null)
-    {
-        MessageBox.Show("Vui lòng tạo hoặc chọn đơn hàng trước khi thêm món!");
-        return;
-    }
-
-    var newItem = new OrderItem
-    {
-        Name = NewItemName ?? "",
-        Quantity = NewItemQuantity,
-        Description = NewItemDescription ?? ""
-    };
-
-    // Nếu đơn hàng chưa lưu DB → chỉ thêm vào danh sách tạm
-    if (SelectedOrder.OrderId == 0)
-    {
-        NewOrderItems.Add(newItem);
-        SelectedOrder.OrderItems.Add(newItem);
-        MessageBox.Show("Đã thêm món (chưa lưu vào cơ sở dữ liệu)!");
-    }
-    else
-    {
-        // Đơn hàng đã lưu DB → thêm thật vào DB
-        using var context = new Sem7Prn212Context();
-        var order = context.Orders.Include(o => o.OrderItems)
-                                  .FirstOrDefault(o => o.OrderId == SelectedOrder.OrderId);
-        if (order == null)
+        private void ExecuteAddItem()
         {
-            MessageBox.Show("Không tìm thấy đơn hàng trong cơ sở dữ liệu!");
-            return;
+            if (SelectedOrder == null)
+            {
+                MessageBox.Show("Vui lòng tạo hoặc chọn đơn hàng trước khi thêm món!");
+                return;
+            }
+
+            var newItem = new OrderItem
+            {
+                Name = NewItemName ?? "",
+                Quantity = NewItemQuantity,
+                Description = NewItemDescription ?? ""
+            };
+
+            if (SelectedOrder.OrderId == 0)
+            {
+                SelectedOrder.OrderItems.Add(newItem);
+                NewOrderItems.Add(newItem);
+                MessageBox.Show("Đã thêm món (chưa lưu vào cơ sở dữ liệu)!");
+            }
+            else
+            {
+                using var context = new Sem7Prn212Context();
+                var order = context.Orders.Include(o => o.OrderItems)
+                                          .FirstOrDefault(o => o.OrderId == SelectedOrder.OrderId);
+                if (order == null)
+                {
+                    MessageBox.Show("Không tìm thấy đơn hàng trong cơ sở dữ liệu!");
+                    return;
+                }
+
+                order.OrderItems.Add(newItem);
+                context.SaveChanges();
+                MessageBox.Show("Đã thêm món vào đơn hàng!");
+
+                LoadData();
+                SelectedOrder = Orders.FirstOrDefault(o => o.OrderId == order.OrderId);
+            }
+
+            ClearOrderItemForm();
         }
-
-        order.OrderItems.Add(newItem);
-        context.SaveChanges();
-
-        LoadData();
-        SelectedOrder = Orders.FirstOrDefault(o => o.OrderId == order.OrderId);
-        MessageBox.Show("Đã thêm món vào đơn hàng!");
-    }
-
-    ClearOrderItemForm();
-}
 
         private void ExecuteUpdateItem()
         {
@@ -349,6 +344,8 @@ namespace LaundryWPF.ViewModels
                 MessageBox.Show("Vui lòng chọn món để cập nhật!");
                 return;
             }
+
+            int? currentOrderId = SelectedOrder?.OrderId;
 
             using var context = new Sem7Prn212Context();
             var item = context.OrderItems.FirstOrDefault(i => i.OrderItemId == SelectedOrderItem.OrderItemId);
@@ -363,18 +360,13 @@ namespace LaundryWPF.ViewModels
             item.Description = NewItemDescription ?? "";
             context.SaveChanges();
 
-            // Lưu lại OrderId trước khi LoadData (tránh SelectedOrder bị null)
-            int? currentOrderId = SelectedOrder?.OrderId;
-
             LoadData();
-
-            // Chỉ tìm lại SelectedOrder nếu còn OrderId hợp lệ
             if (currentOrderId.HasValue)
                 SelectedOrder = Orders.FirstOrDefault(o => o.OrderId == currentOrderId.Value);
 
-            ClearOrderItemForm();
             MessageBox.Show("Đã cập nhật món!");
         }
+
         private void ExecuteDeleteItem()
         {
             if (SelectedOrderItem == null)
@@ -383,8 +375,10 @@ namespace LaundryWPF.ViewModels
                 return;
             }
 
-            if (MessageBox.Show("Xác nhận xóa món này?", "Xóa món", MessageBoxButton.YesNo, MessageBoxImage.Warning)
-                == MessageBoxResult.No) return;
+            if (MessageBox.Show("Xác nhận xóa món này?", "Xóa món", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                return;
+
+            int? currentOrderId = SelectedOrder?.OrderId;
 
             using var context = new Sem7Prn212Context();
             var item = context.OrderItems.FirstOrDefault(i => i.OrderItemId == SelectedOrderItem.OrderItemId);
@@ -393,16 +387,14 @@ namespace LaundryWPF.ViewModels
                 context.OrderItems.Remove(item);
                 context.SaveChanges();
             }
-            // Lưu lại OrderId trước khi LoadData (tránh SelectedOrder bị null)
-            int? currentOrderId = SelectedOrder?.OrderId;
+
             LoadData();
-            // Chỉ tìm lại SelectedOrder nếu còn OrderId hợp lệ
             if (currentOrderId.HasValue)
                 SelectedOrder = Orders.FirstOrDefault(o => o.OrderId == currentOrderId.Value);
+
             ClearOrderItemForm();
             MessageBox.Show("Đã xóa món!");
         }
-
 
         private void ExecuteCompleteOrder()
         {
@@ -414,7 +406,8 @@ namespace LaundryWPF.ViewModels
 
             if (MessageBox.Show("Bạn có chắc chắn muốn đánh dấu đơn hàng này là HOÀN THÀNH?",
                                 "Xác nhận hoàn thành",
-                                MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                                MessageBoxButton.YesNo,
+                                MessageBoxImage.Question) == MessageBoxResult.No)
                 return;
 
             using var context = new Sem7Prn212Context();
@@ -430,8 +423,8 @@ namespace LaundryWPF.ViewModels
             context.SaveChanges();
 
             LoadData();
+            SelectedOrder = Orders.FirstOrDefault(o => o.OrderId == order.OrderId);
             MessageBox.Show("Đơn hàng đã được đánh dấu là HOÀN THÀNH!");
         }
-
     }
 }
