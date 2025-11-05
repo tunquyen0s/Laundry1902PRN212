@@ -1,22 +1,22 @@
 ﻿//using ClosedXML.Excel;
+using ClosedXML.Excel;             
 using LaundryWPF.Helpers;
+
 using LaundryWPF.Models;
-using LaundryWPF.Helpers;
-using LaundryWPF.Models;
+
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Win32;
+using Microsoft.Win32;           
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+              
 using System.Windows.Input;
-using ClosedXML.Excel;             
-using Microsoft.Win32;            
-using System.Windows;              
 namespace LaundryWPF.ViewModels
 {
     public class StaffViewModel : BaseViewModel
@@ -43,15 +43,18 @@ namespace LaundryWPF.ViewModels
             DeAttentCommand = new RelayCommand(DeAttent);
             ResetDayOffCommand = new RelayCommand(ResetAllDayOff);
              ExportExcelCommand = new RelayCommand(ExportToExcel);
+            textboxitem = new Staff();
         }
 
         //Tạo đối tượng lấy dữ liệu từ các TextBox
         private Staff _textboxitem;
         public Staff textboxitem
         {
-            get { return _textboxitem; }
-            set { _textboxitem = value; OnPropertyChanged(nameof(textboxitem)); }
+           get { return _textboxitem; }
+           set { _textboxitem = value; OnPropertyChanged(nameof(textboxitem)); }
+            
         }
+      
 
 
         //Tạo đối tượng lấy dữ liệu selecteditem của View
@@ -77,18 +80,18 @@ namespace LaundryWPF.ViewModels
 
         private void LoadData()
         {
-            using (var context = new Prn212Context())
+            using (var context = new AppDbContext())
             {
-                Staffs = new ObservableCollection<Staff>(context.Staff.ToList());
+                Staffs = new ObservableCollection<Staff>(context.Staffs.ToList());
             }
         }
 
         private void LoadDataActive()
         {
-            using (var context = new Prn212Context())
+            using (var context = new AppDbContext())
             {
                 Staffs = new ObservableCollection<Staff>(
-                    context.Staff
+                    context.Staffs
                            .Where(s => s.Status == "Active")
                            .ToList()
                 );
@@ -105,8 +108,8 @@ namespace LaundryWPF.ViewModels
 
         private async Task RefreshStaffAsync()
         {
-            using var context = new Prn212Context();
-            var list = await context.Staff
+            using var context = new AppDbContext();
+            var list = await context.Staffs
                                     .Where(s => s.Status == "Active")
                                     .ToListAsync();
 
@@ -119,57 +122,70 @@ namespace LaundryWPF.ViewModels
 
         private async void Add(object obj)
         {
-            //if (string.IsNullOrWhiteSpace(_textboxitem.Name))
-            //{
-            //    MessageBox.Show("Tên nhân viên không được để trống!");
-            //    return;
-            //}
+            string name = _textboxitem.Name?.Trim();
+            string phone = _textboxitem.PhoneNumber?.Trim();
+            string status = "Active";
+            decimal salary; 
 
-            //if (_textboxitem.Name.Length > 100)
-            //{
-            //    MessageBox.Show("Tên nhân viên không được vượt quá 100 ký tự!");
-            //    return;
-            //}
-
-            //if (string.IsNullOrWhiteSpace(_textboxitem.PhoneNumber))
-            //{
-            //    MessageBox.Show("Số điện thoại không được để trống!");
-            //    return;
-            //}
-
-            //if (_textboxitem.PhoneNumber.Length > 20)
-            //{
-            //    MessageBox.Show("Số điện thoại không được vượt quá 20 ký tự!");
-            //    return;
-            //}
-
-            //if (_textboxitem.PhoneNumber.Any(c => c > 127))
-            //{
-            //    MessageBox.Show("Số điện thoại chỉ được chứa ký tự ASCII (không dấu)!");
-            //    return;
-            //}
-
-            using (var context = new Prn212Context())
+         
+            if (string.IsNullOrEmpty(name))
             {
-                bool exists = context.Staff.Any(s => s.PhoneNumber == _textboxitem.PhoneNumber);
+                MessageBox.Show("Tên không được để trống!");
+                return;
+            }
+
+            
+            if (string.IsNullOrEmpty(phone))
+            {
+                MessageBox.Show("Số điện thoại không được để trống!");
+                return;
+            }
+
+            if (!Regex.IsMatch(phone, @"^[0-9]{9,11}$"))
+            {
+                MessageBox.Show("Số điện thoại chỉ được chứa số và có độ dài từ 9 đến 11 chữ số!");
+                return;
+            }
+
+           
+            using (var context = new AppDbContext())
+            {
+                bool exists = context.Staffs.Any(s => s.PhoneNumber == phone);
                 if (exists)
                 {
                     MessageBox.Show("Số điện thoại này đã tồn tại!");
                     return;
                 }
+            }
+
+           
+            if (!decimal.TryParse(_textboxitem.Salary.ToString(), out salary))
+            {
+                MessageBox.Show("Lương phải là một số hợp lệ!");
+                return;
+            }
+
+            if (salary <= 0)
+            {
+                MessageBox.Show("Lương phải lớn hơn 0!");
+                return;
+            }
+            using (var context = new AppDbContext())
+            {
+
 
                 var newitem = new Staff
                 {
-                    
-                    Name = _textboxitem.Name,
-                    PhoneNumber = _textboxitem.PhoneNumber,
+                  
+                    Name =  _textboxitem.Name,
+                    PhoneNumber =  _textboxitem.PhoneNumber,
                     Status = "Active",
                     CreateAt = DateTime.Now,
                     Salary = _textboxitem.Salary,
                     DayOff = 0
                 };
 
-                context.Staff.Add(newitem);
+                context.Staffs.Add(newitem);
                 context.SaveChanges();
             }
 
@@ -181,10 +197,10 @@ namespace LaundryWPF.ViewModels
         {
             if (_selecteditem != null)
             {
-                using (var context = new Prn212Context())
+                using (var context = new AppDbContext())
                 {
               
-                    var staff = context.Staff.FirstOrDefault(s => s.StaffId == _selecteditem.StaffId);
+                    var staff = context.Staffs.FirstOrDefault(s => s.StaffId == _selecteditem.StaffId);
 
                     if (staff != null)
                     {
@@ -207,9 +223,9 @@ namespace LaundryWPF.ViewModels
         {
             if (obj is Staff selectedStaff)
             {
-                using (var context = new Prn212Context())
+                using (var context = new AppDbContext())
                 {
-                    var staff = await context.Staff.FirstOrDefaultAsync(s => s.StaffId == selectedStaff.StaffId);
+                    var staff = await context.Staffs.FirstOrDefaultAsync(s => s.StaffId == selectedStaff.StaffId);
 
                     if (staff != null)
                     {           
@@ -227,9 +243,9 @@ namespace LaundryWPF.ViewModels
         {
             if (obj is Staff selectedStaff)
             {
-                using (var context = new Prn212Context())
+                using (var context = new AppDbContext())
                 {
-                    var staff = await context.Staff.FirstOrDefaultAsync(s => s.StaffId == selectedStaff.StaffId);
+                    var staff = await context.Staffs.FirstOrDefaultAsync(s => s.StaffId == selectedStaff.StaffId);
 
                     if (staff != null)
                     {
@@ -268,24 +284,69 @@ namespace LaundryWPF.ViewModels
 
         private async void Update(object obj)
         {
-            if (_selecteditem != null)
+            if (_selecteditem == null)
             {
-                using (var context = new Prn212Context())
-                {
-                    context.Staff.Update(_textboxitem);
-                    context.SaveChanges();
-                }
-                await RefreshStaffAsync();
-
-                textboxitem = new Staff();
+                MessageBox.Show("Vui lòng chọn nhân viên cần cập nhật!");
+                return;
             }
+
+            string name = _textboxitem.Name?.Trim();
+            string phone = _textboxitem.PhoneNumber?.Trim();
+            decimal salary = _textboxitem.Salary ?? 0;
+
+            // 1️⃣ Kiểm tra tên
+            if (string.IsNullOrEmpty(name))
+            {
+                MessageBox.Show("Tên không được để trống!");
+                return;
+            }
+
+            // 2️⃣ Kiểm tra số điện thoại
+            if (string.IsNullOrEmpty(phone))
+            {
+                MessageBox.Show("Số điện thoại không được để trống!");
+                return;
+            }
+
+            if (!Regex.IsMatch(phone, @"^[0-9]{9,11}$"))
+            {
+                MessageBox.Show("Số điện thoại chỉ được chứa số và có độ dài từ 9 đến 11 chữ số!");
+                return;
+            }
+
+            // 3️⃣ Kiểm tra lương
+            if (salary <= 0)
+            {
+                MessageBox.Show("Lương phải lớn hơn 0!");
+                return;
+            }
+
+            // 4️⃣ Kiểm tra trùng số điện thoại với người khác
+            using (var context = new AppDbContext())
+            {
+                bool duplicate = context.Staffs.Any(s => s.PhoneNumber == phone && s.StaffId != _textboxitem.StaffId);
+                if (duplicate)
+                {
+                    MessageBox.Show("Số điện thoại này đã được dùng cho nhân viên khác!");
+                    return;
+                }
+
+                // 5️⃣ Cập nhật
+                context.Staffs.Update(_textboxitem);
+                context.SaveChanges();
+            }
+
+            MessageBox.Show("Cập nhật thông tin nhân viên thành công!");
+            await RefreshStaffAsync();
+
+            _textboxitem = new Staff(); // reset form
         }
 
         private async void ResetAllDayOff(object obj)
         {
-            using (var context = new Prn212Context())
+            using (var context = new AppDbContext())
             {
-                var allStaff = await context.Staff.ToListAsync();
+                var allStaff = await context.Staffs.ToListAsync();
 
                 foreach (var staff in allStaff)
                 {
