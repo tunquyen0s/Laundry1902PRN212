@@ -4,16 +4,19 @@ using LaundryWPF.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
 namespace LaundryWPF.Migrations
 {
-    [DbContext(typeof(Prn212Context))]
-    partial class Prn212ContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(AppDbContext))]
+    [Migration("20251105033346_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,120 +29,93 @@ namespace LaundryWPF.Migrations
                 {
                     b.Property<int>("CustomerId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("CustomerID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerId"));
 
                     b.Property<DateTime?>("CreateAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Status")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasDefaultValue("Active");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int?>("UseTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
+                        .HasColumnType("int");
 
-                    b.HasKey("CustomerId")
-                        .HasName("PK__Customer__A4AE64B8A803CAB6");
+                    b.HasKey("CustomerId");
 
-                    b.HasIndex(new[] { "PhoneNumber" }, "UQ__Customer__85FB4E38B12EC9FA")
-                        .IsUnique();
-
-                    b.ToTable("Customer", (string)null);
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("LaundryWPF.Models.Order", b =>
                 {
                     b.Property<int>("OrderId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("OrderID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
 
                     b.Property<DateTime?>("CreateAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("CustomerId")
-                        .HasColumnType("int")
-                        .HasColumnName("CustomerID");
+                        .HasColumnType("int");
 
                     b.Property<string>("PaymentMethod")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasDefaultValue("Cash");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int?>("ResourceId")
-                        .HasColumnType("int")
-                        .HasColumnName("ResourceID");
+                        .HasColumnType("int");
 
                     b.Property<int>("ServiceId")
-                        .HasColumnType("int")
-                        .HasColumnName("ServiceID");
+                        .HasColumnType("int");
 
                     b.Property<int?>("StaffId")
-                        .HasColumnType("int")
-                        .HasColumnName("StaffID");
+                        .HasColumnType("int");
 
                     b.Property<string>("Status")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasDefaultValue("Processing");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal?>("TotalPrice")
-                        .HasColumnType("decimal(10, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("UpdateAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
+                        .HasColumnType("datetime2");
 
                     b.Property<double?>("Weight")
                         .HasColumnType("float");
 
-                    b.HasKey("OrderId")
-                        .HasName("PK__Order__C3905BAF4B18EE30");
+                    b.HasKey("OrderId");
 
-                    b.HasIndex(new[] { "CustomerId" }, "IX_Order_CustomerID");
+                    b.HasIndex("CustomerId");
 
-                    b.HasIndex(new[] { "ResourceId" }, "IX_Order_ResourceID");
+                    b.HasIndex("ResourceId");
 
-                    b.HasIndex(new[] { "ServiceId" }, "IX_Order_ServiceID");
+                    b.HasIndex("ServiceId");
 
-                    b.HasIndex(new[] { "StaffId" }, "IX_Order_StaffID");
+                    b.HasIndex("StaffId");
 
-                    b.ToTable("Order", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("LaundryWPF.Models.OrderItem", b =>
                 {
                     b.Property<int>("OrderItemId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("OrderItemID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderItemId"));
 
@@ -149,30 +125,27 @@ namespace LaundryWPF.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<int>("OrderId")
-                        .HasColumnType("int")
-                        .HasColumnName("OrderID");
+                        .HasColumnType("int");
 
                     b.Property<int?>("Quantity")
                         .HasColumnType("int");
 
-                    b.HasKey("OrderItemId")
-                        .HasName("PK__OrderIte__57ED06A1416FC287");
+                    b.HasKey("OrderItemId");
 
-                    b.HasIndex(new[] { "OrderId" }, "IX_OrderItem_OrderID");
+                    b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItem", (string)null);
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("LaundryWPF.Models.Resource", b =>
                 {
                     b.Property<int>("ResourceId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ResourceID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ResourceId"));
 
@@ -182,38 +155,34 @@ namespace LaundryWPF.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<decimal?>("PricePerUnit")
-                        .HasColumnType("decimal(10, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal?>("Quantity")
-                        .HasColumnType("decimal(10, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Type")
                         .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Unit")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Unit")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
-                        .HasDefaultValue("Lít");
+                    b.HasKey("ResourceId");
 
-                    b.HasKey("ResourceId")
-                        .HasName("PK__Resource__4ED1814F78244BDF");
-
-                    b.ToTable("Resource", (string)null);
+                    b.ToTable("Resources");
                 });
 
             modelBuilder.Entity("LaundryWPF.Models.Service", b =>
                 {
                     b.Property<int>("ServiceId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ServiceID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ServiceId"));
 
@@ -227,30 +196,26 @@ namespace LaundryWPF.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal?>("PricePerUnit")
-                        .HasColumnType("decimal(10, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("TimeCost")
                         .HasColumnType("int");
 
-                    b.HasKey("ServiceId")
-                        .HasName("PK__Service__C51BB0EA521261E7");
+                    b.HasKey("ServiceId");
 
-                    b.ToTable("Service", (string)null);
+                    b.ToTable("Services");
                 });
 
             modelBuilder.Entity("LaundryWPF.Models.Staff", b =>
                 {
                     b.Property<int>("StaffId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("StaffID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StaffId"));
 
                     b.Property<DateTime?>("CreateAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("DayOff")
                         .HasColumnType("int");
@@ -262,26 +227,18 @@ namespace LaundryWPF.Migrations
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Salary")
-                        .HasColumnType("decimal(10, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Status")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasDefaultValue("Active");
+                        .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("StaffId")
-                        .HasName("PK__Staff__96D4AAF74734A10C");
+                    b.HasKey("StaffId");
 
-                    b.HasIndex(new[] { "PhoneNumber" }, "UQ__Staff__85FB4E38DE42F480")
-                        .IsUnique();
-
-                    b.ToTable("Staff");
+                    b.ToTable("Staffs");
                 });
 
             modelBuilder.Entity("LaundryWPF.Models.Order", b =>
@@ -289,24 +246,22 @@ namespace LaundryWPF.Migrations
                     b.HasOne("LaundryWPF.Models.Customer", "Customer")
                         .WithMany("Orders")
                         .HasForeignKey("CustomerId")
-                        .IsRequired()
-                        .HasConstraintName("FK__Order__CustomerI__5DCAEF64");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("LaundryWPF.Models.Resource", "Resource")
                         .WithMany("Orders")
-                        .HasForeignKey("ResourceId")
-                        .HasConstraintName("FK__Order__ResourceI__5EBF139D");
+                        .HasForeignKey("ResourceId");
 
                     b.HasOne("LaundryWPF.Models.Service", "Service")
                         .WithMany("Orders")
                         .HasForeignKey("ServiceId")
-                        .IsRequired()
-                        .HasConstraintName("FK__Order__ServiceID__5FB337D6");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("LaundryWPF.Models.Staff", "Staff")
                         .WithMany("Orders")
-                        .HasForeignKey("StaffId")
-                        .HasConstraintName("FK__Order__StaffID__6477ECF3");
+                        .HasForeignKey("StaffId");
 
                     b.Navigation("Customer");
 
@@ -323,8 +278,7 @@ namespace LaundryWPF.Migrations
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__OrderItem__Order__693CA210");
+                        .IsRequired();
 
                     b.Navigation("Order");
                 });

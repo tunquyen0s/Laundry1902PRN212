@@ -120,10 +120,10 @@ namespace LaundryWPF.ViewModels
         // =================== LOAD DATA ===================
         private void LoadData()
         {
-            using var context = new Prn212Context();
+            using var context = new AppDbContext();
             AllCustomers = new ObservableCollection<Customer>(context.Customers.ToList());
             AllServices = new ObservableCollection<Service>(context.Services.ToList());
-            AllStaff = new ObservableCollection<Staff>(context.Staff.ToList());
+            AllStaff = new ObservableCollection<Staff>(context.Staffs.ToList());
             AllResources = new ObservableCollection<Resource>(context.Resources.ToList());
 
             _allOrders = context.Orders
@@ -223,7 +223,7 @@ namespace LaundryWPF.ViewModels
                 return;
             }
 
-            using var context = new Prn212Context();
+            using var context = new AppDbContext();
 
             // Nếu là đơn mới (chưa có trong DB)
             if (SelectedOrder.OrderId == 0)
@@ -279,13 +279,13 @@ namespace LaundryWPF.ViewModels
             if (MessageBox.Show("Xác nhận xóa đơn hàng này?", "Xóa đơn hàng", MessageBoxButton.YesNo, MessageBoxImage.Warning)
                 == MessageBoxResult.No) return;
 
-            using var context = new Prn212Context();
+            using var context = new AppDbContext();
             var order = context.Orders.Include(o => o.OrderItems)
                                       .FirstOrDefault(o => o.OrderId == SelectedOrder.OrderId);
 
             if (order != null)
             {
-                context.OrderItems.RemoveRange(order.OrderItems);
+                context.OderItems.RemoveRange(order.OrderItems);
                 context.Orders.Remove(order);
                 context.SaveChanges();
 
@@ -322,7 +322,7 @@ namespace LaundryWPF.ViewModels
     else
     {
         // Đơn hàng đã lưu DB → thêm thật vào DB
-        using var context = new Prn212Context();
+        using var context = new AppDbContext();
         var order = context.Orders.Include(o => o.OrderItems)
                                   .FirstOrDefault(o => o.OrderId == SelectedOrder.OrderId);
         if (order == null)
@@ -350,8 +350,8 @@ namespace LaundryWPF.ViewModels
                 return;
             }
 
-            using var context = new Prn212Context();
-            var item = context.OrderItems.FirstOrDefault(i => i.OrderItemId == SelectedOrderItem.OrderItemId);
+            using var context = new AppDbContext();
+            var item = context.OderItems.FirstOrDefault(i => i.OrderItemId == SelectedOrderItem.OrderItemId);
             if (item == null)
             {
                 MessageBox.Show("Không tìm thấy món trong cơ sở dữ liệu!");
@@ -386,11 +386,11 @@ namespace LaundryWPF.ViewModels
             if (MessageBox.Show("Xác nhận xóa món này?", "Xóa món", MessageBoxButton.YesNo, MessageBoxImage.Warning)
                 == MessageBoxResult.No) return;
 
-            using var context = new Prn212Context();
-            var item = context.OrderItems.FirstOrDefault(i => i.OrderItemId == SelectedOrderItem.OrderItemId);
+            using var context = new AppDbContext();
+            var item = context.OderItems.FirstOrDefault(i => i.OrderItemId == SelectedOrderItem.OrderItemId);
             if (item != null)
             {
-                context.OrderItems.Remove(item);
+                context.OderItems.Remove(item);
                 context.SaveChanges();
             }
             // Lưu lại OrderId trước khi LoadData (tránh SelectedOrder bị null)
@@ -417,7 +417,7 @@ namespace LaundryWPF.ViewModels
                                 MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                 return;
 
-            using var context = new Prn212Context();
+            using var context = new AppDbContext();
             var order = context.Orders.FirstOrDefault(o => o.OrderId == SelectedOrder.OrderId);
             if (order == null)
             {
