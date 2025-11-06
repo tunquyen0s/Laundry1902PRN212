@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LaundryWPF.Migrations
 {
     [DbContext(typeof(Prn212Context))]
-    [Migration("20251103061544_Initial")]
+    [Migration("20251106164858_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -38,6 +38,11 @@ namespace LaundryWPF.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("Name")
                         .IsRequired()
