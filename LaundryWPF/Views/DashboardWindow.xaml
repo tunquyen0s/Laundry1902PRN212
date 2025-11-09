@@ -57,7 +57,7 @@
 
                     <Button Content="🛎 Quản lí dịch vụ" Height="30" Width="160"
                       Style="{StaticResource {x:Type Button}}"
-                      Click="BtnAbout_Click"
+                      Click="BtnServiceManagement_Click"
                       Margin="0,5"
                       Background="Transparent"
                       Foreground="White"

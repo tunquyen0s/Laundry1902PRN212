@@ -54,8 +54,8 @@ namespace LaundryWPF.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    PricePerUnit = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
-                    TimeCost = table.Column<int>(type: "int", nullable: true)
+                    PricePerUnit = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    TimeCost = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

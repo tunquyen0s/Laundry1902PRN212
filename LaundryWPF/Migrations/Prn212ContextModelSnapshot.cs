@@ -226,10 +226,10 @@ namespace LaundryWPF.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<decimal?>("PricePerUnit")
+                    b.Property<decimal>("PricePerUnit")
                         .HasColumnType("decimal(10, 2)");
 
-                    b.Property<int?>("TimeCost")
+                    b.Property<int>("TimeCost")
                         .HasColumnType("int");
 
                     b.HasKey("ServiceId")

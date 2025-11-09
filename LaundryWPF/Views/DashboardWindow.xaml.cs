@@ -54,7 +54,12 @@ namespace LaundryWPF.Views
 
         private void BtnAbout_Click(object sender, RoutedEventArgs e)
         {
-      //      MainFrame.Navigate(new PageAbout());
+            // MainFrame.Navigate(new PageAbout());
+        }
+
+        private void BtnServiceManagement_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new ServiceManagementPage());
         }
 
         private void MainFrame_ContentRendered(object sender, System.EventArgs e)
