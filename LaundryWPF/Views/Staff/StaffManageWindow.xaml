@@ -1,0 +1,61 @@
+﻿<Window x:Class="LaundryWPF.Views.Staff.StaffManageWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LaundryWPF.Views.Staff"
+        mc:Ignorable="d"
+        Title="StaffManageWindow" Height="650" Width="1200">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0"
+                  Background="#FFCCE5FF"
+                  VerticalAlignment="Stretch"
+                  HorizontalAlignment="Stretch"
+                  Margin="0">
+
+            <Button Content="Quay lại" Width="50" Height="30" HorizontalAlignment="Left" Click="btnDashBoard_Click"/>
+
+            <TextBlock Text="MENU"
+                     FontWeight="Bold"
+                     FontSize="18"
+                     Foreground="#003366"
+                     HorizontalAlignment="Center"
+                     Margin="0,20,0,10"/>
+            <Button x:Name="btnAttent"
+       Content="Vắng"
+       Height="40"
+       Margin="10"
+       Click="btnAttent_Click"/>
+            <Button x:Name="btnAdd"
+                  Content="Thêm nhân viên"
+                  Height="40"
+                  Margin="10"
+                  Click="btnAdd_Click"/>
+            <Button x:Name="btnUpdate"
+                  Content="Cập nhật nhân viên"
+                  Height="40"
+                  Margin="10" Click="btnUpdate_Click"/>
+            <Button x:Name="btnDelete"
+                  Content="Sa thải nhân viên"
+                  Height="40"
+                  Margin="10" Click="btnDelete_Click"/>
+            <Button Content="Xuất Excel"
+      Command="{Binding ExportExcelCommand}"
+      Width="120"
+      Height="30"
+      Margin="5"
+      Background="LightGreen"/>
+        </StackPanel>
+
+        <Grid Grid.Column="1">
+
+            <Frame x:Name="MainFrame"
+             NavigationUIVisibility="Hidden"
+             Margin="10"/>
+        </Grid>
+    </Grid>
+</Window>

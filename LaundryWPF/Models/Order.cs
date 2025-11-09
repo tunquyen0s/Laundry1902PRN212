@@ -1,34 +1,45 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Serialization;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LaundryWPF.Models;
 
-public partial class Order
+[Table("Order")]
+public  class Order
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int OrderId { get; set; }
-    [ForeignKey("Customers")]
+    [ForeignKey("Customer")]
+    [Required]
     public int? CustomerId { get; set; }
     [ForeignKey("Resource")]
     public int? ResourceId { get; set; }
-    [ForeignKey("Services")]
+    [ForeignKey("Service")]
     public int? ServiceId { get; set; }
-
-    [Column(TypeName ="decimal(10,2)")]
-    public decimal? TotalPrice { get; set; }
-    [DeniedValues("active")]
-    public string? Status { get; set; }
-
-    public string? PaymentMethod { get; set; }
-
-    public double? Weight { get; set; }
-
+    [ForeignKey("Staff")]
     public int? StaffId { get; set; }
 
+    [Column(TypeName ="decimal(10,2)") ]
+    [Precision(10, 2)]
+    public decimal? TotalPrice { get; set; }
+    [Required]
+    [DefaultValue("Processing")]
+    public string Status { get; set; }
+    [DefaultValue("COD") ]
+    public string? PaymentMethod { get; set; }
+    [Range(0, int.MaxValue, ErrorMessage = "Cân nặng đồ không được âm.")]
+    public double? Weight { get; set; }
+    [DataType(DataType.DateTime, ErrorMessage = "Ngày không đúng định dạng.")]
     public DateTime? CreateAt { get; set; }
+    [DataType(DataType.DateTime)]
+    public DateTime? PickupAt { get; set; }   // Hẹn lấy
+
+    [DataType(DataType.DateTime, ErrorMessage = "Ngày không đúng định dạng.")]
 
     public DateTime? UpdateAt { get; set; }
 

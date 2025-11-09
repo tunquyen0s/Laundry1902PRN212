@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:LaundryWPF.Views"
       mc:Ignorable="d"
       d:DesignWidth="900"
-      Title="ManageResources" Background="White" Height="650">
+      Title="ManageResources" Background="White">
 
     <Grid Background="#f8f9fa" Margin="10">
         <Grid.RowDefinitions>

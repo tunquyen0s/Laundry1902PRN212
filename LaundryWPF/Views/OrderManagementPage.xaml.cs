@@ -24,7 +24,7 @@ namespace LaundryWPF.Views
         public OrderManagementPage()
         {
             InitializeComponent();
-            this.DataContext = new OrderManagementViewModel();
+           DataContext = new OrderManagementViewModel();
         }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

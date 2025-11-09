@@ -1,5 +1,4 @@
-﻿using LaundryWPF.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,14 +16,14 @@ using System.Windows.Shapes;
 namespace LaundryWPF.Views
 {
     /// <summary>
-    /// Interaction logic for PageHome.xaml
+    /// Interaction logic for CustomerManagementPage.xaml
     /// </summary>
-    public partial class PageHome : Page
+    public partial class CustomerManagementPage : Page
     {
-        public PageHome()
+        public CustomerManagementPage()
         {
             InitializeComponent();
-            DataContext = new HomePageViewModel();
+            this.DataContext = new ViewModels.CustomerManagementViewModel();
         }
     }
 }

@@ -45,7 +45,7 @@
             <Grid Grid.Row="1" Margin="0,0,0,12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="6*"/>
-                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
 
                 <!-- Bảng danh sách đơn -->
@@ -64,6 +64,12 @@
                             <DataGridTextColumn Header="Trạng Thái" Binding="{Binding Status}" Width="65"/>
                             <DataGridTextColumn Header="Nhân Viên" Binding="{Binding Staff.Name}" Width="Auto"/>
                             <DataGridTextColumn Header="Kg" Binding="{Binding Weight}" Width="Auto"/>
+
+                            <DataGridTextColumn Header="Phương thức" Binding="{Binding PaymentMethod}" Width="Auto"/>
+                            <DataGridTextColumn Header="Ngày giao" Binding="{Binding CreateAt, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="Auto"/>
+                            <DataGridTextColumn Header="Hẹn lấy" Binding="{Binding PickupAt, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="Auto"/>
+
+                            <DataGridTextColumn Header="Thành tiền" Binding="{Binding TotalPrice, StringFormat='{}{0:N0} VND'}" Width="Auto"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Border>
@@ -95,6 +101,21 @@
 
                         <TextBlock Text="Khối lượng (kg):" FontWeight="SemiBold" Margin="0,8,0,0"/>
                         <TextBox Text="{Binding Weight}" />
+
+                        <TextBlock Text="Hẹn lấy:" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                        <StackPanel Orientation="Horizontal">
+                            <DatePicker SelectedDate="{Binding PickupAt}" Width="150"/>
+                            <TextBox Text="{Binding PickupAt, StringFormat='{}{0:HH:mm}'}" Width="60" Margin="4,0,0,0"/>
+                        </StackPanel>
+
+                        <TextBlock Text="Phương thức thanh toán:" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                        <ComboBox ItemsSource="{Binding AllPaymentMethods}"
+          SelectedItem="{Binding SelectedPaymentMethod}"
+          Width="200"/>
+                        
+                        <TextBlock Text="Thành tiền dự kiến:" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                        <TextBox Text="{Binding EstimatedTotalPrice, StringFormat='{}{0:N0} VND'}" IsReadOnly="True"/>
+
 
                         <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
                             <Button Content="Tạo mới" Command="{Binding CreateOrderCommand}" Margin="4"/>

@@ -14,17 +14,17 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace LaundryWPF.Views
+namespace LaundryWPF.Views.Staff
 {
     /// <summary>
-    /// Interaction logic for PageHome.xaml
+    /// Interaction logic for attent.xaml
     /// </summary>
-    public partial class PageHome : Page
+    public partial class attent : Page
     {
-        public PageHome()
+        public attent()
         {
             InitializeComponent();
-            DataContext = new HomePageViewModel();
+            DataContext = new StaffViewModel();
         }
     }
 }

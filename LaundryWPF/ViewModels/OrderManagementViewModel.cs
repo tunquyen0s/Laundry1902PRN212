@@ -17,6 +17,7 @@ namespace LaundryWPF.ViewModels
         public ObservableCollection<Service> AllServices { get; set; } = new();
         public ObservableCollection<Staff> AllStaff { get; set; } = new();
         public ObservableCollection<Resource> AllResources { get; set; } = new();
+
         public ObservableCollection<OrderItem> NewOrderItems { get; set; } = new();
 
         // =================== FILTER ===================
@@ -36,6 +37,8 @@ namespace LaundryWPF.ViewModels
             {
                 _selectedOrder = value;
                 OnPropertyChanged();
+                if (value != null)
+                    MapOrderToForm();   // <=== Gọi ở đây
                 CommandManager.InvalidateRequerySuggested();
             }
         }
@@ -53,18 +56,64 @@ namespace LaundryWPF.ViewModels
                 CommandManager.InvalidateRequerySuggested();
             }
         }
+        // =================== PaymentMethod đang chọn ===================
+        // Tạo các trường dữ liệu cho combobox 
+        public ObservableCollection<string> AllPaymentMethods { get; set; } =
+            new ObservableCollection<string> { "COD", "MomoPay", "ZaloPay", "QRScan" };
+        private string _selectedPaymentMethod;
+        public string SelectedPaymentMethod
+        {
+            get => _selectedPaymentMethod;
+            set
+            {
+                _selectedPaymentMethod = value;
+                OnPropertyChanged();
+                if (SelectedOrder != null)
+                    SelectedOrder.PaymentMethod = value;
+            }
+        }
+        private DateTime? _pickupAt = DateTime.Now.AddHours(2);
+        public DateTime? PickupAt
+        {
+            get => _pickupAt;
+            set { _pickupAt = value; OnPropertyChanged(); }
+        }
+
+        //==================== Thành tiền dự đoán ===============
+        private decimal? _estimatedTotalPrice;
+        public decimal? EstimatedTotalPrice
+        {
+            get => _estimatedTotalPrice;
+            set { _estimatedTotalPrice = value; OnPropertyChanged(); }
+        }
+
+
 
         // =================== FORM ORDER ===================
         public Customer SelectedCustomer { get => _selectedCustomer; set { _selectedCustomer = value; OnPropertyChanged(); } }
         private Customer _selectedCustomer;
 
-        public Service SelectedService { get => _selectedService; set { _selectedService = value; OnPropertyChanged(); } }
+        public Service SelectedService
+        {
+            get => _selectedService;
+            set
+            {
+                _selectedService = value;
+                OnPropertyChanged();
+                UpdateEstimatedPrice();
+                if (value != null)
+                {
+                    double timeCostInMinutes = value.TimeCost ?? 120;
+                    PickupAt = DateTime.Now.AddMinutes(timeCostInMinutes);
+                }
+            }
+        }
         private Service _selectedService;
 
         public Staff SelectedStaff { get => _selectedStaff; set { _selectedStaff = value; OnPropertyChanged(); } }
         private Staff _selectedStaff;
 
-        public Resource SelectedResource { get => _selectedResource; set { _selectedResource = value; OnPropertyChanged(); } }
+        public Resource SelectedResource { get => _selectedResource; set { _selectedResource = value; OnPropertyChanged(); UpdateEstimatedPrice(); } }
         private Resource _selectedResource;
 
         public double? Weight { get => _weight; set { _weight = value; OnPropertyChanged(); } }
@@ -108,11 +157,12 @@ namespace LaundryWPF.ViewModels
         // =================== LOAD DATA ===================
         private void LoadData()
         {
-            using var context = new Prn212Context();
+            using var context = new Sem7Prn212Context();
             AllCustomers = new ObservableCollection<Customer>(context.Customers.ToList());
             AllServices = new ObservableCollection<Service>(context.Services.ToList());
-            AllStaff = new ObservableCollection<Staff>(context.Staff.ToList());
+            AllStaff = new ObservableCollection<Staff>(context.Staffs.ToList());
             AllResources = new ObservableCollection<Resource>(context.Resources.ToList());
+
 
             _allOrders = context.Orders
                 .Include(o => o.Customer)
@@ -197,10 +247,14 @@ namespace LaundryWPF.ViewModels
         // =================== CRUD ORDER ===================
         private void ExecuteCreateOrder()
         {
+
+            double TimeCost = SelectedService?.TimeCost ?? 120;
+
             var newOrder = new Order
             {
                 Status = "Processing",
                 CreateAt = DateTime.Now,
+                PickupAt = DateTime.Now.AddMinutes(TimeCost),
                 UpdateAt = DateTime.Now,
                 OrderItems = new List<OrderItem>()
             };
@@ -209,7 +263,7 @@ namespace LaundryWPF.ViewModels
             SelectedOrder = newOrder;
             NewOrderItems.Clear();
 
-            MessageBox.Show("Đã tạo đơn hàng mới (chưa lưu vào cơ sở dữ liệu)!");
+            MessageBox.Show($"Đã tạo đơn hàng mới — dự kiến hẹn lấy sau {TimeCost} phút!");
         }
 
         private void ExecuteSaveOrder()
@@ -222,8 +276,19 @@ namespace LaundryWPF.ViewModels
                 return;
             }
 
-            using var context = new Prn212Context();
             int savedOrderId = SelectedOrder?.OrderId ?? 0;
+
+            // Tính tổng tiền
+            decimal servicePrice = Math.Max(0, SelectedService?.PricePerUnit ?? 0);
+            decimal resourcePrice = Math.Max(0, SelectedResource?.PricePerUnit ?? 0);
+            decimal total = (servicePrice + resourcePrice) * (decimal)(Weight ?? 1.0);
+
+
+            if (Weight == null || Weight <= 0)
+            {
+                MessageBox.Show("Khối lượng phải lớn hơn 0!");
+                return;
+            }
 
             if (savedOrderId == 0)
             {
@@ -233,8 +298,11 @@ namespace LaundryWPF.ViewModels
                 SelectedOrder.StaffId = SelectedStaff?.StaffId;
                 SelectedOrder.ResourceId = SelectedResource?.ResourceId;
                 SelectedOrder.Weight = Weight;
-                SelectedOrder.TotalPrice = SelectedService.PricePerUnit * (decimal)(Weight ?? 1.0);
+                SelectedOrder.PaymentMethod = SelectedPaymentMethod;
+                SelectedOrder.PickupAt = PickupAt;
+                SelectedOrder.TotalPrice = total;
                 SelectedOrder.UpdateAt = DateTime.Now;
+
 
                 context.Orders.Add(SelectedOrder);
                 context.SaveChanges();
@@ -254,8 +322,10 @@ namespace LaundryWPF.ViewModels
                 order.StaffId = SelectedStaff?.StaffId;
                 order.ResourceId = SelectedResource?.ResourceId;
                 order.Weight = Weight;
+                order.PaymentMethod = SelectedPaymentMethod;
+                order.PickupAt = PickupAt;
                 order.UpdateAt = DateTime.Now;
-                order.TotalPrice = SelectedService.PricePerUnit * (decimal)(Weight ?? 1.0);
+                order.TotalPrice = total;
 
                 context.SaveChanges();
                 MessageBox.Show("Đã cập nhật đơn hàng!");
@@ -276,7 +346,7 @@ namespace LaundryWPF.ViewModels
             if (MessageBox.Show("Xác nhận xóa đơn hàng này?", "Xóa đơn hàng", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
                 return;
 
-            using var context = new Prn212Context();
+            using var context = new Sem7Prn212Context();
             var order = context.Orders.Include(o => o.OrderItems)
                                       .FirstOrDefault(o => o.OrderId == SelectedOrder.OrderId);
 
@@ -301,42 +371,52 @@ namespace LaundryWPF.ViewModels
                 return;
             }
 
-            var newItem = new OrderItem
+            if (string.IsNullOrWhiteSpace(NewItemName) || NewItemQuantity == null || NewItemQuantity <= 0)
             {
-                Name = NewItemName ?? "",
-                Quantity = NewItemQuantity,
-                Description = NewItemDescription ?? ""
-            };
-
-    // Nếu đơn hàng chưa lưu DB → chỉ thêm vào danh sách tạm
-    if (SelectedOrder.OrderId == 0)
-    {
-        NewOrderItems.Add(newItem);
-        SelectedOrder.OrderItems.Add(newItem);
-        MessageBox.Show("Đã thêm món (chưa lưu vào cơ sở dữ liệu)!");
-    }
-    else
-    {
-        // Đơn hàng đã lưu DB → thêm thật vào DB
-        using var context = new Prn212Context();
-        var order = context.Orders.Include(o => o.OrderItems)
-                                  .FirstOrDefault(o => o.OrderId == SelectedOrder.OrderId);
-        if (order == null)
-        {
-            MessageBox.Show("Không tìm thấy đơn hàng trong cơ sở dữ liệu!");
-            return;
-        }
-
-                order.OrderItems.Add(newItem);
-                context.SaveChanges();
-                MessageBox.Show("Đã thêm món vào đơn hàng!");
-
-                LoadData();
-                SelectedOrder = Orders.FirstOrDefault(o => o.OrderId == order.OrderId);
+                MessageBox.Show("Tên món và số lượng hợp lệ là bắt buộc!");
+                return;
             }
 
+            var newItem = new OrderItem
+            {
+                Name = NewItemName.Trim(),
+                Quantity = NewItemQuantity,
+                Description = NewItemDescription?.Trim() ?? ""
+            };
+
+            // Nếu đơn hàng chưa lưu DB
+            if (SelectedOrder.OrderId == 0)
+            {
+                SelectedOrder.OrderItems.Add(newItem);
+                NewOrderItems.Add(newItem);
+                ClearOrderItemForm();
+
+                MessageBox.Show("Đã thêm món mới! Hãy thêm đầy đủ dữ liệu rồi nhấn 'Lưu' để lưu vào cơ sở dữ liệu.");
+                return;
+            }
+
+            // Nếu đã lưu DB
+            using var context = new Sem7Prn212Context();
+            var order = context.Orders.Include(o => o.OrderItems)
+                                      .FirstOrDefault(o => o.OrderId == SelectedOrder.OrderId);
+
+            if (order == null)
+            {
+                MessageBox.Show("Không tìm thấy đơn hàng trong cơ sở dữ liệu!");
+                return;
+            }
+
+            order.OrderItems.Add(newItem);
+            context.SaveChanges();
+
+            LoadData();
+            SelectedOrder = Orders.FirstOrDefault(o => o.OrderId == order.OrderId);
+            MessageBox.Show("Đã thêm món mới và lưu vào cơ sở dữ liệu!");
+
             ClearOrderItemForm();
+            OnPropertyChanged(nameof(NewOrderItems));
         }
+
 
         private void ExecuteUpdateItem()
         {
@@ -381,7 +461,7 @@ namespace LaundryWPF.ViewModels
 
             int? currentOrderId = SelectedOrder?.OrderId;
 
-            using var context = new Prn212Context();
+            using var context = new Sem7Prn212Context();
             var item = context.OrderItems.FirstOrDefault(i => i.OrderItemId == SelectedOrderItem.OrderItemId);
             if (item != null)
             {
@@ -411,7 +491,7 @@ namespace LaundryWPF.ViewModels
                                 MessageBoxImage.Question) == MessageBoxResult.No)
                 return;
 
-            using var context = new Prn212Context();
+            using var context = new Sem7Prn212Context();
             var order = context.Orders.FirstOrDefault(o => o.OrderId == SelectedOrder.OrderId);
             if (order == null)
             {
@@ -426,6 +506,13 @@ namespace LaundryWPF.ViewModels
             LoadData();
             SelectedOrder = Orders.FirstOrDefault(o => o.OrderId == order.OrderId);
             MessageBox.Show("Đơn hàng đã được đánh dấu là HOÀN THÀNH!");
+        }
+        private void UpdateEstimatedPrice()
+        {
+            decimal service = SelectedService?.PricePerUnit ?? 0;
+            decimal resource = SelectedResource?.PricePerUnit ?? 0;
+            decimal w = (decimal)(Weight ?? 1);
+            EstimatedTotalPrice = (service + resource) * w;
         }
     }
 }

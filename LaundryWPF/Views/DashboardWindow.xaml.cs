@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LaundryWPF.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -47,14 +48,34 @@ namespace LaundryWPF.Views
             MainFrame.Navigate(new PageHome());
         }
 
-        private void BtnSettings_Click(object sender, RoutedEventArgs e)
+        private void BtnOrder_Click(object sender, RoutedEventArgs e)
         {
                       MainFrame.Navigate(new OrderManagementPage());
         }
 
-        private void BtnAbout_Click(object sender, RoutedEventArgs e)
+
+        private void BtnServiceManagement_Click(object sender, RoutedEventArgs e)
         {
-      //      MainFrame.Navigate(new PageAbout());
+            MainFrame.Navigate(new ServiceManagementPage());
+        }
+
+      
+
+
+        private void BtnManageResources_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new ManageResources());
+        }
+        private void BtnStaff_Click(object sender, RoutedEventArgs e)
+        {
+            Staff.StaffManageWindow StaffManageWindow = new Staff.StaffManageWindow();
+            StaffManageWindow.Show();
+            this.Hide();
+
+        }
+        private void BtnCustomer_Click(object sender, RoutedEventArgs e)
+        {
+                  MainFrame.Navigate(new CustomerManagementPage());
         }
 
         private void MainFrame_ContentRendered(object sender, System.EventArgs e)
@@ -62,9 +83,5 @@ namespace LaundryWPF.Views
             // Tự động focus trang mới (nếu cần)
         }
 
-        private void BtnManageResources_Click(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(new ManageResources());
-        }
     }
 }   

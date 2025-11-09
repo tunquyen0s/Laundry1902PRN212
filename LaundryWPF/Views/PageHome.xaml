@@ -4,19 +4,43 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:LaundryWPF.Views"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      xmlns:viewmodels="clr-namespace:LaundryWPF.ViewModels"
+mc:Ignorable="d"
+d:DataContext="{d:DesignInstance Type=viewmodels:OrderManagementViewModel}"
       Title="PageHome">
 
-    <Grid Background="AliceBlue">
-        <Grid.ColumnDefinitions/>
-        
+    <ScrollViewer Padding="16">
+        <StackPanel>
+            <TextBlock Text="ĐƠN HÀNG QUÁ HẠN" 
+                       FontSize="20" 
+                       FontWeight="Bold"
+                       Foreground="#DC2626" 
+                       Margin="0,0,0,10"/>
 
+            <TextBlock Text="{Binding LateCount, StringFormat='Tổng cộng: {0} đơn quá hạn'}"
+                       FontWeight="SemiBold"
+                       Foreground="#9B1C1C"
+                       Margin="0,0,0,10"/>
 
-        <TextBlock Text="Trang chủ 🏠"
-                   FontSize="28"
-                   FontWeight="Bold"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Right" Margin="0,0,312,0"/>
-    </Grid>
+            <DataGrid ItemsSource="{Binding LateOrders}"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      IsReadOnly="True"
+                      RowHeight="30"
+                      BorderBrush="#DC2626"
+                      BorderThickness="1"
+                      HeadersVisibility="Column">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Mã Đơn" Binding="{Binding OrderId}" Width="50"/>
+                    <DataGridTextColumn Header="Khách Hàng" Binding="{Binding Customer.Name}" Width="150"/>
+                    <DataGridTextColumn Header="Dịch Vụ" Binding="{Binding Service.Name}" Width="150"/>
+                    <DataGridTextColumn Header="Nhân Viên" Binding="{Binding Staff.Name}" Width="150"/>
+                    <DataGridTextColumn Header="Trạng thái" Binding="{Binding Status}" Width="100"/>
+                    <DataGridTextColumn Header="Hẹn lấy" Binding="{Binding PickupAt, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="150"/>
+                    <DataGridTextColumn Header="Ngày tạo" Binding="{Binding CreateAt, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="150"/>
+                    <DataGridTextColumn Header="Tổng tiền" Binding="{Binding TotalPrice, StringFormat={}{0:C0}}" Width="100"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+    </ScrollViewer>
 </Page>
