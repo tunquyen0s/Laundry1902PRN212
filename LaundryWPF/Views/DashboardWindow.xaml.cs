@@ -61,5 +61,10 @@ namespace LaundryWPF.Views
         {
             // Tự động focus trang mới (nếu cần)
         }
+
+        private void BtnManageResources_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new ManageResources());
+        }
     }
 }   

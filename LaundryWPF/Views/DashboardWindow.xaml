@@ -66,7 +66,7 @@
 
                     <Button Content="🧰 Quản lí tài nguyên" Height="30" Width="160"
                       Style="{StaticResource {x:Type Button}}"
-                      Click="BtnAbout_Click"
+                      Click="BtnManageResources_Click"
                       Margin="0,5"
                       Background="Transparent"
                       Foreground="White"
