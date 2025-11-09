@@ -108,7 +108,7 @@ namespace LaundryWPF.ViewModels
         // =================== LOAD DATA ===================
         private void LoadData()
         {
-            using var context = new Sem7Prn212Context();
+            using var context = new Prn212Context();
             AllCustomers = new ObservableCollection<Customer>(context.Customers.ToList());
             AllServices = new ObservableCollection<Service>(context.Services.ToList());
             AllStaff = new ObservableCollection<Staff>(context.Staff.ToList());
@@ -222,6 +222,7 @@ namespace LaundryWPF.ViewModels
                 return;
             }
 
+            using var context = new Prn212Context();
             int savedOrderId = SelectedOrder?.OrderId ?? 0;
 
             if (savedOrderId == 0)
@@ -275,7 +276,7 @@ namespace LaundryWPF.ViewModels
             if (MessageBox.Show("Xác nhận xóa đơn hàng này?", "Xóa đơn hàng", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
                 return;
 
-            using var context = new Sem7Prn212Context();
+            using var context = new Prn212Context();
             var order = context.Orders.Include(o => o.OrderItems)
                                       .FirstOrDefault(o => o.OrderId == SelectedOrder.OrderId);
 
@@ -307,22 +308,24 @@ namespace LaundryWPF.ViewModels
                 Description = NewItemDescription ?? ""
             };
 
-            if (SelectedOrder.OrderId == 0)
-            {
-                SelectedOrder.OrderItems.Add(newItem);
-                NewOrderItems.Add(newItem);
-                MessageBox.Show("Đã thêm món (chưa lưu vào cơ sở dữ liệu)!");
-            }
-            else
-            {
-                using var context = new Sem7Prn212Context();
-                var order = context.Orders.Include(o => o.OrderItems)
-                                          .FirstOrDefault(o => o.OrderId == SelectedOrder.OrderId);
-                if (order == null)
-                {
-                    MessageBox.Show("Không tìm thấy đơn hàng trong cơ sở dữ liệu!");
-                    return;
-                }
+    // Nếu đơn hàng chưa lưu DB → chỉ thêm vào danh sách tạm
+    if (SelectedOrder.OrderId == 0)
+    {
+        NewOrderItems.Add(newItem);
+        SelectedOrder.OrderItems.Add(newItem);
+        MessageBox.Show("Đã thêm món (chưa lưu vào cơ sở dữ liệu)!");
+    }
+    else
+    {
+        // Đơn hàng đã lưu DB → thêm thật vào DB
+        using var context = new Prn212Context();
+        var order = context.Orders.Include(o => o.OrderItems)
+                                  .FirstOrDefault(o => o.OrderId == SelectedOrder.OrderId);
+        if (order == null)
+        {
+            MessageBox.Show("Không tìm thấy đơn hàng trong cơ sở dữ liệu!");
+            return;
+        }
 
                 order.OrderItems.Add(newItem);
                 context.SaveChanges();
@@ -378,7 +381,7 @@ namespace LaundryWPF.ViewModels
 
             int? currentOrderId = SelectedOrder?.OrderId;
 
-            using var context = new Sem7Prn212Context();
+            using var context = new Prn212Context();
             var item = context.OrderItems.FirstOrDefault(i => i.OrderItemId == SelectedOrderItem.OrderItemId);
             if (item != null)
             {
@@ -408,7 +411,7 @@ namespace LaundryWPF.ViewModels
                                 MessageBoxImage.Question) == MessageBoxResult.No)
                 return;
 
-            using var context = new Sem7Prn212Context();
+            using var context = new Prn212Context();
             var order = context.Orders.FirstOrDefault(o => o.OrderId == SelectedOrder.OrderId);
             if (order == null)
             {
