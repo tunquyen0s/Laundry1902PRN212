@@ -96,7 +96,7 @@ namespace LaundryWPF.ViewModels
             _context = new Sem7Prn212Context();
             Resources = new ObservableCollection<Resource>(_context.Resources.ToList());
 
-            UnitOptions = new ObservableCollection<string> { "Kg", "Lít", "Cái" };
+            UnitOptions = new ObservableCollection<string> { "kg", "lít", "cái", "m³" };
             TextBoxItem = new Resource
             {
                 Unit = UnitOptions.FirstOrDefault()
