@@ -42,6 +42,7 @@ namespace LaundryWPF.ViewModels
                 var lateOrders = context.Orders
                     .Include(o => o.Customer)
                     .Include(o => o.Staff)
+                    .Include(o => o.Service)
                     .Where(o =>
                     o.Status != "Complete" &&
                     o.PickupAt != null &&
