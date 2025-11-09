@@ -5,14 +5,12 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:LaundryWPF.Views"
       mc:Ignorable="d" 
-      d:DesignHeight="600" d:DesignWidth="1000"
+      d:DesignHeight="838" d:DesignWidth="1544"
       Title="Quản lý dịch vụ giặt ủi">
 
     <Page.Resources>
-        <!-- Bộ chuyển đổi cơ bản -->
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
-        <!-- Style cho TextBox có trạng thái hợp lệ -->
         <Style x:Key="ValidatedTextBoxStyle" TargetType="TextBox">
             <Setter Property="BorderBrush" Value="#D1D5DB"/>
             <Setter Property="BorderThickness" Value="1"/>
@@ -21,7 +19,6 @@
             <Setter Property="FontSize" Value="13"/>
         </Style>
 
-        <!-- Style cho TextBlock hiển thị lỗi -->
         <Style x:Key="ErrorTextStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="Red"/>
             <Setter Property="FontSize" Value="11"/>
@@ -162,29 +159,29 @@
                             <TextBlock Text="Giá dịch vụ (VND) *" FontWeight="SemiBold" Margin="0,0,0,5"/>
                             <TextBox Text="{Binding PricePerUnit, UpdateSourceTrigger=PropertyChanged}" 
                                     Style="{StaticResource ValidatedTextBoxStyle}"/>
-                            <TextBlock Text="{Binding PricePerUnitError}" 
+                            <TextBlock Text="{Binding PriceError}" 
                                       Style="{StaticResource ErrorTextStyle}"/>
                         </StackPanel>
 
                         <!-- Thời gian thực hiện -->
                         <StackPanel Margin="0,0,0,15">
-                            <TextBlock Text="Thời gian thực hiện (phút)" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                            <TextBlock Text="Thời gian thực hiện (phút) *" FontWeight="SemiBold" Margin="0,0,0,5"/>
                             <TextBox Text="{Binding TimeCost, UpdateSourceTrigger=PropertyChanged}" 
                                     Style="{StaticResource ValidatedTextBoxStyle}"/>
-                            <TextBlock Text="{Binding TimeCostError}" 
+                            <TextBlock Text="{Binding TimeError}" 
                                       Style="{StaticResource ErrorTextStyle}"/>
                         </StackPanel>
 
                         <!-- Ghi chú -->
                         <StackPanel Margin="0,0,0,20">
                             <TextBlock Text="* Trường bắt buộc" 
-                                      FontStyle="Italic" FontSize="12" 
+                                      FontStyle="Italic" FontSize="12"   
                                       Foreground="#6B7280"/>
                         </StackPanel>
 
                         <!-- Nút thao tác -->
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <Button Content="Lưu" Width="100" Height="40" Margin="0,0,10,0"
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+                            <Button Content="Lưu" Width="100" Height="40"
                                    Command="{Binding SaveServiceCommand}"
                                    Background="#059669" Foreground="White" 
                                    FontWeight="Bold" FontSize="13"/>
