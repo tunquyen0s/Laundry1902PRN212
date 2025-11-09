@@ -4,7 +4,7 @@
 *.suo
 *.userosscache
 *.sln.docstates
-LTShopOnline.WebMVC/appsettings.json
+LaundryWPF/appsettings.json
 # Build results
 [Bb]in/
 [Oo]bj/

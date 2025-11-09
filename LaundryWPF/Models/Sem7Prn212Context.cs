@@ -71,7 +71,7 @@ public partial class Sem7Prn212Context : DbContext
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
                 .HasDefaultValue("Active");
-            entity.Property(e => e.UseTime).HasDefaultValue(0);
+            //entity.Property(e => e.UseTime).HasDefaultValue(0);
         });
 
         modelBuilder.Entity<Order>(entity =>
