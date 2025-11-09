@@ -1,10 +1,13 @@
-﻿using LaundryWPF.Helpers;
+﻿using DocumentFormat.OpenXml.InkML;
+using LaundryWPF.Helpers;
 using LaundryWPF.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -15,56 +18,71 @@ namespace LaundryWPF.ViewModels
     {
         private readonly Sem7Prn212Context _context;
 
-        private Resource _selectedResource;
-        private string _searchText;
-
         public ObservableCollection<Resource> Resources { get; set; }
 
+
+        private Resource _selectedResource;
         public Resource SelectedResource
         {
             get => _selectedResource;
             set
             {
-                _selectedResource = value;
-                OnPropertyChanged();
 
-                if (value != null)
+                _selectedResource = value;
+
+                if (_selectedResource != null)
                 {
-                    Type = value.Type;
-                    Name = value.Name;
-                    Unit = value.Unit;
-                    Description = value.Description;
-                    PricePerUnit = value.PricePerUnit ?? 0;
-                    Quantity = value.Quantity ?? 0;
+
+
+                    TextBoxItem = new Resource
+                    {
+                        ResourceId = _selectedResource.ResourceId,
+                        Name = _selectedResource.Name,
+                        Type = _selectedResource.Type,
+                        Unit = _selectedResource.Unit,
+                        Description = _selectedResource.Description,
+                        Quantity = _selectedResource.Quantity,
+                        PricePerUnit = _selectedResource.PricePerUnit,
+                    };
                 }
+
+
+                OnPropertyChanged(nameof(SelectedResource));
             }
         }
 
-        // 🔹 Thuộc tính cho form
-        private string _type;
-        public string Type { get => _type; set { _type = value; OnPropertyChanged(); } }
 
-        private string _name;
-        public string Name { get => _name; set { _name = value; OnPropertyChanged(); } }
+        private Resource _textBoxItem;
+        public Resource TextBoxItem
+        {
+            get => _textBoxItem;
+            set
+            {
 
-        private string _unit;
-        public string Unit { get => _unit; set { _unit = value; OnPropertyChanged(); } }
+                _textBoxItem = value;
 
-        private string _description;
-        public string Description { get => _description; set { _description = value; OnPropertyChanged(); } }
+                OnPropertyChanged(nameof(TextBoxItem));
+            }
+        }
 
-        private decimal _pricePerUnit;
-        public decimal PricePerUnit { get => _pricePerUnit; set { _pricePerUnit = value; OnPropertyChanged(); } }
 
-        private decimal _quantity;
-        public decimal Quantity { get => _quantity; set { _quantity = value; OnPropertyChanged(); } }
 
-        public ObservableCollection<string> UnitOptions { get; set; }
+        private string _searchText;
         public string SearchText
         {
             get => _searchText;
-            set { _searchText = value; OnPropertyChanged(); }
+            set
+            {
+
+                _searchText = value;
+
+
+                OnPropertyChanged(nameof(SearchText));
+            }
         }
+
+
+        public ObservableCollection<string> UnitOptions { get; set; }
 
         // 🔹 Command
         public ICommand AddCommand { get; }
@@ -72,21 +90,22 @@ namespace LaundryWPF.ViewModels
         public ICommand DeleteCommand { get; }
         public ICommand ClearCommand { get; }
         public ICommand SearchCommand { get; }
-        public ICommand RefreshCommand { get; }
 
         public ManageResourcesViewModel()
         {
             _context = new Sem7Prn212Context();
             Resources = new ObservableCollection<Resource>(_context.Resources.ToList());
 
-            UnitOptions = new ObservableCollection<string> { "Kg", "Lít" };
-            Unit = UnitOptions.First();
-            AddCommand = new RelayCommand(_ => AddResource());
-            UpdateCommand = new RelayCommand(_ => UpdateResource(), _ => SelectedResource != null);
-            DeleteCommand = new RelayCommand(_ => DeleteResource(), _ => SelectedResource != null);
-            ClearCommand = new RelayCommand(_ => ClearFields());
-            SearchCommand = new RelayCommand(_ => SearchResource());
-            RefreshCommand = new RelayCommand(_ => LoadResources());
+            UnitOptions = new ObservableCollection<string> { "Kg", "Lít", "Cái" };
+            TextBoxItem = new Resource
+            {
+                Unit = UnitOptions.FirstOrDefault()
+            };
+            AddCommand = new RelayCommand(AddResource);
+            UpdateCommand = new RelayCommand(UpdateResource);
+            DeleteCommand = new RelayCommand(DeleteResource);
+            ClearCommand = new RelayCommand(ClearFields);
+            SearchCommand = new RelayCommand(SearchResource);
             LoadResources();
         }
 
@@ -128,60 +147,64 @@ namespace LaundryWPF.ViewModels
         }
 
 
-        private void AddResource()
+        private async void AddResource(Object obj)
         {
             try
-            {
-
-                // Kiểm tra rỗng
-                if (string.IsNullOrWhiteSpace(Name))
+            {  
+                String name = TextBoxItem.Name;
+                var quantity = TextBoxItem.Quantity.ToString();
+                String type = TextBoxItem.Type;
+                var PricePerUnit = TextBoxItem.PricePerUnit.ToString();
+                if (name == null || name.Trim().Length == 0)
                 {
                     MessageBox.Show("⚠ Vui lòng nhập tên tài nguyên.", "Thiếu dữ liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
-
-                // ✅ Kiểm tra Quantity có phải số hợp lệ không
-                if (!decimal.TryParse(Quantity.ToString(), out decimal qty))
+                if (type == null || type.Trim().Length == 0)
                 {
-                    MessageBox.Show("⚠ Quantity phải là số hợp lệ.", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("⚠ Vui lòng nhập loại tài nguyên.", "Thiếu dữ liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
-
-                // ✅ Kiểm tra PricePerUnit có phải số hợp lệ không
-                if (!decimal.TryParse(PricePerUnit.ToString(), out decimal price))
+                if (!Decimal.TryParse(quantity, out _))
                 {
-                    MessageBox.Show("⚠ Price per unit phải là số hợp lệ.", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("⚠ Số lượng tài nguyên phải là một số hợp lệ.", "Dữ liệu không hợp lệ", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
-
-                // ✅ Kiểm tra âm
-                if (qty < 0)
+                if (Decimal.Parse(quantity) < 0)
                 {
-                    MessageBox.Show("⚠ Quantity không thể nhỏ hơn 0.", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("⚠ Số lượng tài nguyên không thể nhỏ hơn 0.", "Dữ liệu không hợp lệ", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
-                if (price < 0)
+                if(!Decimal.TryParse(PricePerUnit, out _))
                 {
-                    MessageBox.Show("⚠ Price per unit không thể nhỏ hơn 0.", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("⚠ Giá tài nguyên phải là một số hợp lệ.", "Dữ liệu không hợp lệ", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                if (Decimal.Parse(PricePerUnit) < 0)
+                {
+                    MessageBox.Show("⚠ Giá tài nguyên không thể nhỏ hơn 0.", "Dữ liệu không hợp lệ", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
                 var newRes = new Resource
                 {
-                    Type = Type,
-                    Name = Name,
-                    Unit = Unit,
-                    Description = Description,
-                    PricePerUnit = price,
-                    Quantity = qty
+                    Type = type,
+                    Name = name,
+                    Unit = TextBoxItem.Unit,
+                    Description = TextBoxItem.Description,
+                    PricePerUnit = Decimal.Parse(PricePerUnit),
+                    Quantity = Decimal.Parse(quantity)
                 };
 
                 _context.Resources.Add(newRes);
                 _context.SaveChanges();
                 Resources.Add(newRes);
-
+                TextBoxItem = new Resource
+                {
+                    Unit = UnitOptions.FirstOrDefault(),
+                };
                 MessageBox.Show("✅ Thêm tài nguyên thành công!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                ClearFields();
+                await RefreshAsync();
             }
             catch (Exception ex)
             {
@@ -193,7 +216,7 @@ namespace LaundryWPF.ViewModels
         }
 
 
-        private void UpdateResource()
+        private async void UpdateResource(Object obj)
         {
             if (SelectedResource == null)
             {
@@ -203,55 +226,52 @@ namespace LaundryWPF.ViewModels
 
             try
             {
-                // 🔹 Kiểm tra dữ liệu nhập
-                if (string.IsNullOrWhiteSpace(Name))
+                String name = TextBoxItem.Name;
+                var quantity = TextBoxItem.Quantity.ToString();
+                String type = TextBoxItem.Type;
+                var PricePerUnit = TextBoxItem.PricePerUnit.ToString();
+                if (name == null || name.Trim().Length == 0)
                 {
                     MessageBox.Show("⚠ Vui lòng nhập tên tài nguyên.", "Thiếu dữ liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
-
-                // 🔹 Kiểm tra số lượng hợp lệ
-                if (!decimal.TryParse(Quantity.ToString(), out decimal qty))
+                if (type == null || type.Trim().Length == 0)
                 {
-                    MessageBox.Show("⚠ Quantity phải là số hợp lệ.", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("⚠ Vui lòng nhập loại tài nguyên.", "Thiếu dữ liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                if (!Decimal.TryParse(quantity, out _))
+                {
+                    MessageBox.Show("⚠ Số lượng tài nguyên phải là một số hợp lệ.", "Dữ liệu không hợp lệ", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                if (Decimal.Parse(quantity) < 0)
+                {
+                    MessageBox.Show("⚠ Số lượng tài nguyên không thể nhỏ hơn 0.", "Dữ liệu không hợp lệ", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                if (!Decimal.TryParse(PricePerUnit, out _))
+                {
+                    MessageBox.Show("⚠ Giá tài nguyên phải là một số hợp lệ.", "Dữ liệu không hợp lệ", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                if (Decimal.Parse(PricePerUnit) < 0)
+                {
+                    MessageBox.Show("⚠ Giá tài nguyên không thể nhỏ hơn 0.", "Dữ liệu không hợp lệ", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                // 🔹 Kiểm tra giá hợp lệ
-                if (!decimal.TryParse(PricePerUnit.ToString(), out decimal price))
-                {
-                    MessageBox.Show("⚠ Price per unit phải là số hợp lệ.", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                // 🔹 Kiểm tra âm
-                if (qty < 0)
-                {
-                    MessageBox.Show("⚠ Quantity không thể nhỏ hơn 0.", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-                if (price < 0)
-                {
-                    MessageBox.Show("⚠ Price per unit không thể nhỏ hơn 0.", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
+                using var context = new Sem7Prn212Context();  
                 // 🔹 Lấy resource từ DB và cập nhật
-                var res = _context.Resources.FirstOrDefault(r => r.ResourceId == SelectedResource.ResourceId);
-                if (res != null)
+                context.Update(TextBoxItem);
+                await context.SaveChangesAsync();
+                await RefreshAsync();
+                TextBoxItem = new Resource
                 {
-                    res.Type = Type;
-                    res.Name = Name;
-                    res.Unit = Unit;
-                    res.Description = Description;
-                    res.PricePerUnit = price;
-                    res.Quantity = qty;
-
-                    _context.SaveChanges();
-                    LoadResources();
-
-                    MessageBox.Show("🔄 Cập nhật thành công!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
+                    Unit = UnitOptions.FirstOrDefault(),
+                };
+                MessageBox.Show("🔄 Cập nhật thành công!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                
             }
             catch (Exception ex)
             {
@@ -261,7 +281,7 @@ namespace LaundryWPF.ViewModels
         }
 
 
-        private void DeleteResource()
+        private async void DeleteResource(Object obj)
         {
             if (SelectedResource == null)
             {
@@ -269,18 +289,22 @@ namespace LaundryWPF.ViewModels
                 return;
             }
 
-            var confirm = MessageBox.Show($"Xóa tài nguyên '{SelectedResource.Name}'?",
+            var confirm = MessageBox.Show($"Xóa tài nguyên '{TextBoxItem.Name}'?",
                                           "Xác nhận xóa", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (confirm != MessageBoxResult.Yes) return;
 
             try
             {
-                _context.Resources.Remove(SelectedResource);
-                _context.SaveChanges();
-                Resources.Remove(SelectedResource);
-                ClearFields();
+                using var context = new Sem7Prn212Context();
+                context.Resources.Remove(SelectedResource);
+                await context.SaveChangesAsync();
+                await RefreshAsync();
 
+                TextBoxItem = new Resource
+                {
+                    Unit = UnitOptions.FirstOrDefault(),
+                };
                 MessageBox.Show("🗑 Xóa thành công!", "Deleted", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
@@ -289,7 +313,7 @@ namespace LaundryWPF.ViewModels
             }
         }
 
-        private void SearchResource()
+        private async void SearchResource(object obj)
         {
             try
             {
@@ -299,13 +323,17 @@ namespace LaundryWPF.ViewModels
                     return;
                 }
 
-                var results = _context.Resources
-                    .Where(r => r.Name.Contains(SearchText) || r.Type.Contains(SearchText))
+                var keyword = _searchText?.Trim().ToLower() ?? "";
+                using var context = new Sem7Prn212Context();
+                var filtered = context.Resources
+                    .Where(w =>
+                        w.Name.ToLower().Contains(keyword) ||
+                        w.Type.ToLower().Contains(keyword))
                     .ToList();
 
                 Resources.Clear();
-                foreach (var r in results)
-                    Resources.Add(r);
+                foreach (var w in filtered)
+                    Resources.Add(w);
             }
             catch (Exception ex)
             {
@@ -313,13 +341,26 @@ namespace LaundryWPF.ViewModels
             }
         }
 
-        private void ClearFields()
-        {
-            Type = Name = Unit = Description = string.Empty;
-            PricePerUnit = 0;
-            Quantity = 0;
-              Unit = UnitOptions.First();
+        private async void ClearFields(object obj)
+        {                   
+            TextBoxItem = new Resource
+            {
+                Unit = UnitOptions.FirstOrDefault(),
+            };
             SelectedResource = null;
+        }
+
+        private async Task RefreshAsync()
+        {
+            using var context = new Sem7Prn212Context();
+
+            var list = await context.Resources.ToListAsync();
+
+            Resources.Clear();
+            foreach (var item in list)
+                Resources.Add(item);
+
+            OnPropertyChanged(nameof(Resources));
         }
 
         #endregion
