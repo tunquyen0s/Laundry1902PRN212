@@ -197,26 +197,43 @@ namespace LaundryWPF.ViewModels
         {
             if (_selecteditem != null)
             {
-                using (var context = new Sem7Prn212Context())
+                // Hiển thị hộp thoại xác nhận
+                var result = MessageBox.Show(
+                    $"Bạn có chắc chắn muốn vô hiệu hóa nhân viên \"{_selecteditem.Name}\" không?",
+                    "Xác nhận xóa",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question
+                );
+
+                if (result == MessageBoxResult.Yes)
                 {
-              
-                    var staff = context.Staffs.FirstOrDefault(s => s.StaffId == _selecteditem.StaffId);
-
-                    if (staff != null)
+                    using (var context = new Sem7Prn212Context())
                     {
-                        
-                        staff.Status = "UnActive";
+                        var staff = context.Staffs.FirstOrDefault(s => s.StaffId == _selecteditem.StaffId);
 
-                        context.SaveChanges();
+                        if (staff != null)
+                        {
+                            staff.Status = "UnActive";
+                            staff.PhoneNumber = "vo hieu hoa";
+
+                            context.SaveChanges();
+                        }
                     }
+
+                    await RefreshStaffAsync();
+                    textboxitem = new Staff();
+
+                    MessageBox.Show("Đã vô hiệu hóa nhân viên thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-
-                await RefreshStaffAsync();
-
-                textboxitem = new Staff();
+                else
+                {
+                    MessageBox.Show("Đã hủy thao tác.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
             }
-
-
+            else
+            {
+                MessageBox.Show("Vui lòng chọn nhân viên cần xóa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         private async void Attent(object obj)
@@ -370,10 +387,9 @@ namespace LaundryWPF.ViewModels
 
             try
             {
-
                 var dialog = new SaveFileDialog
                 {
-                    FileName = "LuongNhanVien.xlsx",
+                    FileName = $"LuongNhanVien {DateTime.Now:MM-yyyy}.xlsx",
                     Filter = "Excel Workbook (*.xlsx)|*.xlsx"
                 };
 
@@ -383,22 +399,22 @@ namespace LaundryWPF.ViewModels
                     {
                         var worksheet = workbook.Worksheets.Add("Nhân viên");
 
-
                         worksheet.Cell(1, 1).Value = "Tên";
-                        worksheet.Cell(1, 2).Value = "Số điện thoại";                   
+                        worksheet.Cell(1, 2).Value = "Số điện thoại";
                         worksheet.Cell(1, 3).Value = "Lương";
-                       
 
                         int row = 2;
-                        foreach (var staff in Staffs)
+
+                        // ✅ Chỉ lấy nhân viên có trạng thái Active
+                        foreach (var staff in Staffs.Where(s => s.Status == "Active"))
                         {
                             worksheet.Cell(row, 1).Value = staff.Name;
                             worksheet.Cell(row, 2).Value = staff.PhoneNumber;
-                            worksheet.Cell(row, 3).Value = (double)staff.Salary / 30 * (30 - staff.DayOff);
+                            worksheet.Cell(row, 3).Value =
+                                ((double)(staff.Salary ?? 0) / 30.0) * (30 - (staff.DayOff ?? 0));
 
                             row++;
                         }
-
 
                         worksheet.Columns().AdjustToContents();
                         worksheet.Row(1).Style.Font.Bold = true;

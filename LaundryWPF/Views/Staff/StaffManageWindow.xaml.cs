@@ -35,22 +35,29 @@ namespace LaundryWPF.Views.Staff
         }
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
-
+            StaffDataGrid.Visibility = Visibility.Collapsed;
+            MainFrame.Visibility = Visibility.Visible;
             MainFrame.Content = new add();
         }
 
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
+            StaffDataGrid.Visibility = Visibility.Collapsed;
+            MainFrame.Visibility = Visibility.Visible;
             MainFrame.Content = new update();
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
+            StaffDataGrid.Visibility = Visibility.Collapsed;
+            MainFrame.Visibility = Visibility.Visible;
             MainFrame.Content = new delete();
         }
 
         private void btnAttent_Click(object sender, RoutedEventArgs e)
         {
+            StaffDataGrid.Visibility = Visibility.Collapsed;
+            MainFrame.Visibility = Visibility.Visible;
             MainFrame.Content = new attent();
         }
     }

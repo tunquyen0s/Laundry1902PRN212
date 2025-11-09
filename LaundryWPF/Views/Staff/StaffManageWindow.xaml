@@ -52,10 +52,28 @@
         </StackPanel>
 
         <Grid Grid.Column="1">
+            <!-- DataGrid mặc định -->
+            <DataGrid x:Name="StaffDataGrid"
+                      ItemsSource="{Binding Staffs}"
+                      SelectedItem="{Binding selecteditem, Mode=OneWayToSource}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      SelectionMode="Single"
+                      Margin="10">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="StaffId" Binding="{Binding StaffId}" Width="100"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150"/>
+                    <DataGridTextColumn Header="PhoneNumber" Binding="{Binding PhoneNumber}" Width="150"/>
+                    <DataGridTextColumn Header="Salary" Binding="{Binding Salary}" Width="150"/>
+                    <DataGridTextColumn Header="DayOff" Binding="{Binding DayOff}" Width="150"/>
+                </DataGrid.Columns>
+            </DataGrid>
 
+            <!-- Frame để hiển thị các Page khác -->
             <Frame x:Name="MainFrame"
-             NavigationUIVisibility="Hidden"
-             Margin="10"/>
+                   NavigationUIVisibility="Hidden"
+                   Margin="10"
+                   Visibility="Collapsed"/>
         </Grid>
     </Grid>
 </Window>
