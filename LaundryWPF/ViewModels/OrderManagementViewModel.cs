@@ -36,8 +36,6 @@ namespace LaundryWPF.ViewModels
             {
                 _selectedOrder = value;
                 OnPropertyChanged();
-                if (value != null)
-                    MapOrderToForm();
                 CommandManager.InvalidateRequerySuggested();
             }
         }

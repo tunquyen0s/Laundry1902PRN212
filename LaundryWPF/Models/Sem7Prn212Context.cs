@@ -33,13 +33,6 @@ public partial class Sem7Prn212Context : DbContext
     {
         string currentDir = Directory.GetCurrentDirectory();
         string appSettingsPath = Path.Combine(currentDir, "appsettings.json");
-
-        // Dòng code kiểm tra "sống còn"
-        if (!File.Exists(appSettingsPath))
-        {
-            throw new FileNotFoundException($"LỖI NGHIÊM TRỌNG: Không tìm thấy file appsettings.json tại đường dẫn '{appSettingsPath}'. Hãy đảm bảo file tồn tại và thuộc tính 'Copy to Output Directory' của nó được đặt là 'Copy if newer'.");
-        }
-
         IConfiguration configuration = new ConfigurationBuilder()
             .SetBasePath(currentDir)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
