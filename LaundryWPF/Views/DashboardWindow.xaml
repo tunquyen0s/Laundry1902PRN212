@@ -81,6 +81,15 @@
                       Foreground="White"
                       HorizontalAlignment="Left"      
                       HorizontalContentAlignment="Left"/>
+
+                    <Button Content="📢 Đơn hàng quá hạn" Height="30" Width="160"
+                    Style="{StaticResource {x:Type Button}}"
+                    Click="BtnOverDue_Click"
+                    Margin="0,5"
+                    Background="Transparent"
+                    Foreground="White"
+                    HorizontalAlignment="Left"      
+                    HorizontalContentAlignment="Left"/>
                 </StackPanel>
             </DockPanel>
         </Border>
